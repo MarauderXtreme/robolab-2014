@@ -15,9 +15,11 @@
 #define B NXT_PORT_B
 #define C NXT_PORT_C
 
-/// DO NOT DELETE THIS METHOD
-/// It is called every 1ms and e.g. can be used for implementing a
-/// real time counter / clock.
+/**
+ * DO NOT DELETE THIS METHOD
+ * It is called every 1ms and e.g. can be used for implementing a
+ * real time counter / clock.
+ */
 void user_1ms_isr_type2(void) {
 }
 
@@ -27,6 +29,16 @@ void ecrobot_device_initialize() {
 
 void ecrobot_device_terminate(void) {
 	ecrobot_set_light_sensor_inactive(S1);
+}
+
+void display_message() {
+	display_clear(0);
+	display_goto_xy(0,0);
+	display_int(ecrobot_get_light_sensor(S1),4);
+	display_goto_xy(0,1);
+	display_string('EXTERMINATE');
+	display_update();
+	systick_wait_ms(500);
 }
 
 void start_robo() {
@@ -43,14 +55,25 @@ void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
 
+void turn_left() {
+	nxt_motor_set_count(B,45);
+	nxt_motor_set_count(C,-45);
+}
+
+void turn_right() {
+	nxt_motor_set_count(B,-45);
+	nxt_motor_set_count(C,45);
+}
+
+int find_way_back() {
+	while(1) {
+	}
+	return 0;
+}
+
 TASK(OSEK_Main_Task) {
 	while(1) {
-		display_clear(0);
-		display_goto_xy(0,0);
-		display_int(ecrobot_get_light_sensor(S1),4);
-		display_update();
-		systick_wait_ms(500);
-
+		display_message();
 
 		if(ecrobot_get_light_sensor(S1) <= 600) {
 			stop_robo();
@@ -64,6 +87,10 @@ TASK(OSEK_Main_Task) {
 			beep();
 		}
 		else {
+			/**
+			 * Prevent that Robot will start immediately if token is removed
+			 */
+			systick_wait_ms(100);
 			start_robo();
 		}
 	}
