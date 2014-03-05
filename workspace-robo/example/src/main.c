@@ -56,19 +56,37 @@ void beep() {
 }
 
 void turn_left() {
-	nxt_motor_set_count(B,45);
-	nxt_motor_set_count(C,-45);
+	nxt_motor_set_count(B,90);
+	nxt_motor_set_count(C,-90);
 }
 
 void turn_right() {
-	nxt_motor_set_count(B,-45);
-	nxt_motor_set_count(C,45);
+	nxt_motor_set_count(B,-90);
+	nxt_motor_set_count(C,90);
 }
 
 int find_way_back() {
 	while(1) {
 	}
 	return 0;
+}
+
+void find_way_back_right() {
+	if(ecrobot_get_light_sensor(S1) <= 600) {
+		while(ecrobot_get_light_sensor(S1) <= 600) {
+			nxt_motor_set_count(B,-1);
+			if (nxt_motor_get_count(B) >= 100) {
+				break;
+			}
+		}
+		while(ecrobot_get_light_sensor(S1) <= 600) {
+			nxt_motor_set_count(B,1);
+			if(ecrobot_get_light_sensor(S1) >= 580) {
+				break;
+			}
+		}
+	}
+
 }
 
 TASK(OSEK_Main_Task) {
