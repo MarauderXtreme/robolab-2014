@@ -45,7 +45,6 @@ void start_robo() {
 	nxt_motor_set_speed(B, -65, 0);
 	nxt_motor_set_speed(C, -65, 0);
 }
-
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
 	nxt_motor_set_speed(C, 0, 1);
@@ -55,63 +54,95 @@ void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
 
-void turn_left() {
-	nxt_motor_set_count(B,45);
-	nxt_motor_set_count(C,-45);
+int straight() {
+	for(int i=0;i<=660;i++) {
+		nxt_motor_set_count(B, -1);
+		nxt_motor_set_count(C, -1);
+		if(ecrobot_get_light_sensor(S1) <= 600){
+			return i;
+		}
+	}
+	return 0;
 }
 
-void turn_right() {
-	nxt_motor_set_count(B,-45);
-	nxt_motor_set_count(C,45);
-}
-
-void find_way_back_zikzak() {
-	while(ecrobot_get_light_sensor(S1) >= 400) {
-		nxt_motor_set_speed(C, -65, 0);
-		nxt_motor_set_speed(B, -50, 0);
-		display_message();
-	}
-	while(ecrobot_get_light_sensor(S1) >= 600) {
-		nxt_motor_set_speed(C, -50, 0);
-		nxt_motor_set_speed(B, -65, 0);
-		display_message();
-	}
-}
 int find_way_back() {
 	while(1) {
 	}
 	return 0;
 }
 
+int count() {
+	display_clear(0);
+		display_goto_xy(0,0);
+		display_int(nxt_motor_get_count(B),4);
+		display_update();
+		systick_wait_ms(50);
+		return 0;
+}
+
+void linien_folger() {
+	nxt_motor_set_speed(B, -60, 0);
+	nxt_motor_set_speed(C, -40, 0);
+
+	if(nxt_motor_get_count(B) <= -50) {
+		nxt_motor_set_speed(B, -60, 0);
+		nxt_motor_set_speed(C, -40, 0);
+		nxt_motor_set_count(B, 0);
+		nxt_motor_set_count(C, 0);
+		if(nxt_motor_get_count(C) >= 30) {
+			nxt_motor_set_speed(B, -40, 0);
+			nxt_motor_set_speed(C, -60, 0);
+			nxt_motor_set_count(B, 0);
+			nxt_motor_set_count(C, 0);
+		}
+		if(nxt_motor_get_count(B) >= 50) {
+			nxt_motor_set_speed(B, -40, 0);
+			nxt_motor_set_speed(C, -60, 0);
+			nxt_motor_set_count(B, 0);
+			nxt_motor_set_count(C, 0);
+		}
+		if(nxt_motor_get_count(C) >= -30) {
+			nxt_motor_set_speed(B, -60, 0);
+			nxt_motor_set_speed(C, -50, 0);
+			nxt_motor_set_count(B, 0);
+			nxt_motor_set_count(C, 0);
+		}
+	}
+
+}
+
+
 TASK(OSEK_Main_Task) {
 	while(1) {
 		display_message();
-		find_way_back_zikzak();
-		/*if(ecrobot_get_light_sensor(S1) <= 600) {
-			/*stop_robo();*/
-			/*beep();
-		}
-		else {
+		while(ecrobot_get_light_sensor(S1) >= 500) {
 			start_robo();
-		}*/
+		}
+		if(ecrobot_get_light_sensor(S1) <= 500) {
+			linien_folger();
+		}
 
-		if(ecrobot_get_touch_sensor(S2) == 1 || ecrobot_get_touch_sensor(S3) == 1) {
-			stop_robo();
-			beep();
-			break;
-		}
-		else {
-			/**
-			 * Prevent that Robot will start immediately if token is removed
-			 */
-			systick_wait_ms(100);
-			start_robo();
-		}
+	}
+
+	/*if(ecrobot_get_light_sensor(S1) <= 600) {
+		stop_robo();
+		beep();
+	}
+	else {
+		start_robo();
+	}*/
+
+	if(ecrobot_get_touch_sensor(S2) == 1 || ecrobot_get_touch_sensor(S3) == 1) {
+		stop_robo();
+		beep();
+	}
+	else {
+		/**
+		 * Prevent that Robot will start immediately if token is removed
+		 */
+		systick_wait_ms(100);
 	}
 	/**
 	 * Prevent state unclear if breaking while
 	 */
-	while(1) {
-		systick_wait_ms(50);
-	}
 }
