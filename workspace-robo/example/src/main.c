@@ -16,6 +16,13 @@
 #define C NXT_PORT_C
 
 /**
+ * define speed_level
+ */
+#define maxpower -80
+#define mediumpower -70
+#define lowpower -60
+
+/**
  * DO NOT DELETE THIS METHOD
  * It is called every 1ms and e.g. can be used for implementing a
  * real time counter / clock.
@@ -42,8 +49,8 @@ void display_message() {
 }
 
 void start_robo() {
-	nxt_motor_set_speed(B, -65, 0);
-	nxt_motor_set_speed(C, -65, 0);
+	nxt_motor_set_speed(B, maxpower, 0);
+	nxt_motor_set_speed(C, maxpower, 0);
 }
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
@@ -66,6 +73,9 @@ int straight() {
 long line_degree = 660;
 int rotate_degree = 60;
 
+/**
+ * give deegres of turn from b back
+ */
 int count() {
 	display_clear(0);
 	display_goto_xy(0,0);
@@ -76,29 +86,47 @@ int count() {
 }
 
 void line_follower() {
-	nxt_motor_set_speed(B, -60, 0);
-	nxt_motor_set_speed(C, -40, 0);
+	/**
+	 * firstturn
+	 */
+	nxt_motor_set_speed(B, 40, 0);
+	nxt_motor_set_speed(C,-60, 0);
 
+	nxt_motor_set_count(B, 0);
+	nxt_motor_set_count(C, 0);
+	/**
+	 * turnback left
+	 */
 	if(nxt_motor_get_count(B) <= -50) {
 		nxt_motor_set_speed(B, -60, 0);
-		nxt_motor_set_speed(C, -40, 0);
+		nxt_motor_set_speed(C, 40, 0);
 		nxt_motor_set_count(B, 0);
 		nxt_motor_set_count(C, 0);
-		if(nxt_motor_get_count(C) >= 50) {
-			nxt_motor_set_speed(B, -40, 0);
+		/**
+		 * turnback right
+		 */
+		if(nxt_motor_get_count(C) >= 30) {
+			nxt_motor_set_speed(B, 40, 0);
 			nxt_motor_set_speed(C, -60, 0);
 			nxt_motor_set_count(B, 0);
 			nxt_motor_set_count(C, 0);
 		}
-		if(nxt_motor_get_count(B) >= 50) {
-			nxt_motor_set_speed(B, -40, 0);
-			nxt_motor_set_speed(C, -60, 0);
-			nxt_motor_set_count(B, 0);
-			nxt_motor_set_count(C, 0);
-		}
+	}
+	/**
+	 * turnback left
+	 */
+	if(nxt_motor_get_count(B) >= 30) {
+		nxt_motor_set_speed(B, 40, 0);
+		nxt_motor_set_speed(C, -60, 0);
+		nxt_motor_set_count(B, 0);
+		nxt_motor_set_count(C, 0);
+
+			/**
+			 * turnback right
+			 */
 		if(nxt_motor_get_count(C) >= -50) {
 			nxt_motor_set_speed(B, -60, 0);
-			nxt_motor_set_speed(C, -50, 0);
+			nxt_motor_set_speed(C, 40, 0);
 			nxt_motor_set_count(B, 0);
 			nxt_motor_set_count(C, 0);
 		}
@@ -110,11 +138,11 @@ void line_follower() {
 TASK(OSEK_Main_Task) {
 	while(1) {
 		display_message();
-		while(ecrobot_get_light_sensor(S1) >= 500) {
+		while(ecrobot_get_light_sensor(S1) >= 540) {
 			start_robo();
 		}
-		if(ecrobot_get_light_sensor(S1) <= 500) {
-			linien_folger();
+		if(ecrobot_get_light_sensor(S1) <= 540) {
+			line_follower();
 		}
 
 	}
@@ -140,4 +168,8 @@ TASK(OSEK_Main_Task) {
 	/**
 	 * Prevent state unclear if breaking while
 	 */
+	while(1) {
+		systick_wait_ms(1);
+
+	}
 }
