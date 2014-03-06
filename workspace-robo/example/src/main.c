@@ -89,7 +89,7 @@ void linien_folger() {
 		nxt_motor_set_speed(C, -40, 0);
 		nxt_motor_set_count(B, 0);
 		nxt_motor_set_count(C, 0);
-		if(nxt_motor_get_count(C) >= 30) {
+		if(nxt_motor_get_count(C) >= 50) {
 			nxt_motor_set_speed(B, -40, 0);
 			nxt_motor_set_speed(C, -60, 0);
 			nxt_motor_set_count(B, 0);
@@ -101,7 +101,7 @@ void linien_folger() {
 			nxt_motor_set_count(B, 0);
 			nxt_motor_set_count(C, 0);
 		}
-		if(nxt_motor_get_count(C) >= -30) {
+		if(nxt_motor_get_count(C) >= -50) {
 			nxt_motor_set_speed(B, -60, 0);
 			nxt_motor_set_speed(C, -50, 0);
 			nxt_motor_set_count(B, 0);
