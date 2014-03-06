@@ -49,8 +49,8 @@ void display_message() {
 }
 
 void start_robo() {
-	nxt_motor_set_speed(B, maxpower, 0);
-	nxt_motor_set_speed(C, maxpower, 0);
+	nxt_motor_set_speed(B, mediumpower, 0);
+	nxt_motor_set_speed(C, mediumpower, 0);
 }
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
@@ -60,18 +60,6 @@ void stop_robo() {
 void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
-int straight() {
-	for(int i=0;i<=660;i++) {
-		nxt_motor_set_count(B, -1);
-		nxt_motor_set_count(C, -1);
-		if(ecrobot_get_light_sensor(S1) <= 600){
-			return i;
-		}
-	}
-	return 0;
-}
-long line_degree = 660;
-int rotate_degree = 60;
 
 /**
  * give deegres of turn from b back
@@ -85,91 +73,70 @@ int count() {
 	return 0;
 }
 
-void line_follower() {
-	/**
-	 * firstturn
-	 */
-	nxt_motor_set_speed(B, 40, 0);
-	nxt_motor_set_speed(C,-60, 0);
-
-	nxt_motor_set_count(B, 0);
-	nxt_motor_set_count(C, 0);
-	/**
-	 * turnback left
-	 */
-	if(nxt_motor_get_count(B) <= -50) {
-		nxt_motor_set_speed(B, -60, 0);
-		nxt_motor_set_speed(C, 40, 0);
-		nxt_motor_set_count(B, 0);
-		nxt_motor_set_count(C, 0);
-		/**
-		 * turnback right
-		 */
-		if(nxt_motor_get_count(C) >= 30) {
-			nxt_motor_set_speed(B, 40, 0);
-			nxt_motor_set_speed(C, -60, 0);
-			nxt_motor_set_count(B, 0);
-			nxt_motor_set_count(C, 0);
-		}
-	}
-	/**
-	 * turnback left
-	 */
-	if(nxt_motor_get_count(B) >= 30) {
-		nxt_motor_set_speed(B, 40, 0);
-		nxt_motor_set_speed(C, -60, 0);
-		nxt_motor_set_count(B, 0);
-		nxt_motor_set_count(C, 0);
-
-			/**
-			 * turnback right
-			 */
-		if(nxt_motor_get_count(C) >= -50) {
-			nxt_motor_set_speed(B, -60, 0);
-			nxt_motor_set_speed(C, 40, 0);
-			nxt_motor_set_count(B, 0);
-			nxt_motor_set_count(C, 0);
-		}
-	}
-
+int is_black() {
+	if(ecrobot_get_light_sensor(S1) >= 540) return 1;
+	//if(ecrobot_get_light_sensor(S1) <= 540) return 0;
+	return 0;
 }
 
+int get_degree_b(int degree) {
+	if(nxt_motor_get_count(B) >= degree) return 1;
+	//if(nxt_motor_get_count(B) < degree) return 0;
+	return 0;
+}
+int get_degree_c(int degree) {
+	if(nxt_motor_get_count(C) >= degree) return 1;
+	//if(nxt_motor_get_count(C) < degree) return 0;
+	return 0;
+}
+void set_count_zero() {
+	nxt_motor_set_count(B, 0);
+	nxt_motor_set_count(C, 0);
+}
+void find_way_back() {
+	set_count_zero();
+	while(get_degree_b(30) != 1) {
+		nxt_motor_set_speed(B,  60, 0);
+		nxt_motor_set_speed(C, -60, 0);
+		if(is_black() == 1) {
+			stop_robo();
+			return;
+		}
+	}
+	stop_robo();
+	while(get_degree_c(30) != 1) {
+		nxt_motor_set_speed(B, -60, 0);
+		nxt_motor_set_speed(C,  60, 0);
+		if(is_black() == 1) {
+			stop_robo();
+			return;
+		}
+	}
+	stop_robo();
+}
+
+void set_position_back() {
+	while(get_degree_b(0) != 1 && get_degree_c(0) != 1) {
+		nxt_motor_set_speed(B,  60, 0);
+		nxt_motor_set_speed(C, -60, 0);
+	}
+	stop_robo();
+}
 
 TASK(OSEK_Main_Task) {
 	while(1) {
-		display_message();
-		while(ecrobot_get_light_sensor(S1) >= 540) {
+		if(is_black() == 1) {
 			start_robo();
 		}
-		if(ecrobot_get_light_sensor(S1) <= 540) {
-			line_follower();
+		if(is_black() == 0) {
+			find_way_back();
+			set_position_back();
 		}
-
-	}
-
-	/*if(ecrobot_get_light_sensor(S1) <= 600) {
-		stop_robo();
-		beep();
-	}
-	else {
-		start_robo();
-	}*/
-
-	if(ecrobot_get_touch_sensor(S2) == 1 || ecrobot_get_touch_sensor(S3) == 1) {
-		stop_robo();
-		beep();
-	}
-	else {
-		/**
-		 * Prevent that Robot will start immediately if token is removed
-		 */
-		systick_wait_ms(100);
 	}
 	/**
 	 * Prevent state unclear if breaking while
 	 */
 	while(1) {
 		systick_wait_ms(1);
-
 	}
 }
