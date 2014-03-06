@@ -70,6 +70,9 @@ int find_way_back() {
 	}
 	return 0;
 }
+long line_degree = 660;
+int rotate_degree = 60;
+
 
 void find_way_back_right() {
 	if(ecrobot_get_light_sensor(S1) <= 600) {
