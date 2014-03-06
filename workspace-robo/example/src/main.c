@@ -29,15 +29,23 @@
  */
 void user_1ms_isr_type2(void) {
 }
-
+/**
+ * Initialize Device
+ */
 void ecrobot_device_initialize() {
 	 ecrobot_set_light_sensor_active(S1);
 }
 
+/**
+ * Terminate Device
+ */
 void ecrobot_device_terminate(void) {
 	ecrobot_set_light_sensor_inactive(S1);
 }
 
+/**
+ * Get the light sensor data
+ */
 void display_message() {
 	display_clear(0);
 	display_goto_xy(0,0);
@@ -48,28 +56,28 @@ void display_message() {
 	systick_wait_ms(500);
 }
 
+/**
+ * Should be pretty self-explaining
+ */
 void start_robo() {
 	nxt_motor_set_speed(B, maxpower, 0);
 	nxt_motor_set_speed(C, maxpower, 0);
 }
+/**
+ * See start_robo()
+ */
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
 	nxt_motor_set_speed(C, 0, 1);
 }
 
+/**
+ * BEEEEEP
+ */
 void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
-int straight() {
-	for(int i=0;i<=660;i++) {
-		nxt_motor_set_count(B, -1);
-		nxt_motor_set_count(C, -1);
-		if(ecrobot_get_light_sensor(S1) <= 600){
-			return i;
-		}
-	}
-	return 0;
-}
+
 long line_degree = 660;
 int rotate_degree = 60;
 
@@ -87,13 +95,14 @@ int count() {
 
 void line_follower() {
 	/**
-	 * firstturn
+	 * firstturn right
 	 */
 	nxt_motor_set_speed(B, 40, 0);
 	nxt_motor_set_speed(C,-60, 0);
 
 	nxt_motor_set_count(B, 0);
 	nxt_motor_set_count(C, 0);
+	
 	/**
 	 * turnback left
 	 */
@@ -121,9 +130,9 @@ void line_follower() {
 		nxt_motor_set_count(B, 0);
 		nxt_motor_set_count(C, 0);
 
-			/**
-			 * turnback right
-			 */
+		/**
+		 * turnback right
+		 */
 		if(nxt_motor_get_count(C) >= -50) {
 			nxt_motor_set_speed(B, -60, 0);
 			nxt_motor_set_speed(C, 40, 0);
@@ -165,8 +174,9 @@ TASK(OSEK_Main_Task) {
 		 */
 		systick_wait_ms(100);
 	}
+
 	/**
-	 * Prevent state unclear if breaking while
+	 * Prevent state unclear if breaking main while(1)
 	 */
 	while(1) {
 		systick_wait_ms(1);
