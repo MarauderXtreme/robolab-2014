@@ -48,9 +48,13 @@ void display_message() {
 	systick_wait_ms(500);
 }
 
+void set_velocity(vb,vc) {
+	nxt_motor_set_speed(B, vb, 0);
+	nxt_motor_set_speed(C, vc, 0);
+}
+
 void start_robo() {
-	nxt_motor_set_speed(B, mediumpower, 0);
-	nxt_motor_set_speed(C, mediumpower, 0);
+	set_velocity(mediumpower,mediumpower);
 }
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
@@ -59,18 +63,6 @@ void stop_robo() {
 
 void beep() {
 	ecrobot_sound_tone(300,500,40);
-}
-
-/**
- * give deegres of turn from b back
- */
-int count() {
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(nxt_motor_get_count(B),4);
-	display_update();
-	systick_wait_ms(50);
-	return 0;
 }
 
 int is_black() {
@@ -96,8 +88,7 @@ void set_count_zero() {
 void find_way_back() {
 	set_count_zero();
 	while(get_degree_b(30) != 1) {
-		nxt_motor_set_speed(B,  60, 0);
-		nxt_motor_set_speed(C, -60, 0);
+		set_velocity(60,-60);
 		if(is_black() == 1) {
 			stop_robo();
 			return;
@@ -105,8 +96,7 @@ void find_way_back() {
 	}
 	stop_robo();
 	while(get_degree_c(30) != 1) {
-		nxt_motor_set_speed(B, -60, 0);
-		nxt_motor_set_speed(C,  60, 0);
+		set_velocity(-60,60);
 		if(is_black() == 1) {
 			stop_robo();
 			return;
@@ -115,12 +105,12 @@ void find_way_back() {
 	stop_robo();
 }
 
-void set_position_back() {
+int set_position_back() {
 	while(get_degree_b(0) != 1 && get_degree_c(0) != 1) {
-		nxt_motor_set_speed(B,  60, 0);
-		nxt_motor_set_speed(C, -60, 0);
+		beep();
+		set_velocity(60,-60);
 	}
-	stop_robo();
+	return 0;
 }
 
 TASK(OSEK_Main_Task) {
@@ -130,7 +120,7 @@ TASK(OSEK_Main_Task) {
 		}
 		if(is_black() == 0) {
 			find_way_back();
-			set_position_back();
+			if(set_position_back() == 0) stop_robo();
 		}
 	}
 	/**
