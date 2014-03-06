@@ -53,7 +53,6 @@ void stop_robo() {
 void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
-
 int straight() {
 	for(int i=0;i<=660;i++) {
 		nxt_motor_set_count(B, -1);
@@ -64,23 +63,19 @@ int straight() {
 	}
 	return 0;
 }
-
-int find_way_back() {
-	while(1) {
-	}
-	return 0;
-}
+long line_degree = 660;
+int rotate_degree = 60;
 
 int count() {
 	display_clear(0);
-		display_goto_xy(0,0);
-		display_int(nxt_motor_get_count(B),4);
-		display_update();
-		systick_wait_ms(50);
-		return 0;
+	display_goto_xy(0,0);
+	display_int(nxt_motor_get_count(B),4);
+	display_update();
+	systick_wait_ms(50);
+	return 0;
 }
 
-void linien_folger() {
+void line_follower() {
 	nxt_motor_set_speed(B, -60, 0);
 	nxt_motor_set_speed(C, -40, 0);
 
