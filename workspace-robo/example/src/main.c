@@ -29,15 +29,23 @@
  */
 void user_1ms_isr_type2(void) {
 }
-
+/**
+ * Initialize Device
+ */
 void ecrobot_device_initialize() {
 	 ecrobot_set_light_sensor_active(S1);
 }
 
+/**
+ * Terminate Device
+ */
 void ecrobot_device_terminate(void) {
 	ecrobot_set_light_sensor_inactive(S1);
 }
 
+/**
+ * Get the light sensor data
+ */
 void display_message() {
 	display_clear(0);
 	display_goto_xy(0,0);
@@ -53,14 +61,23 @@ void set_velocity(vb,vc) {
 	nxt_motor_set_speed(C, vc, 0);
 }
 
+/**
+ * Should be pretty self-explaining
+ */
 void start_robo() {
 	set_velocity(mediumpower,mediumpower);
 }
+/**
+ * See start_robo()
+ */
 void stop_robo() {
 	nxt_motor_set_speed(B, 0, 1);
 	nxt_motor_set_speed(C, 0, 1);
 }
 
+/**
+ * BEEEEEP
+ */
 void beep() {
 	ecrobot_sound_tone(300,500,40);
 }
@@ -123,8 +140,9 @@ TASK(OSEK_Main_Task) {
 			if(set_position_back() == 0) stop_robo();
 		}
 	}
+
 	/**
-	 * Prevent state unclear if breaking while
+	 * Prevent state unclear if breaking main while(1)
 	 */
 	while(1) {
 		systick_wait_ms(1);
