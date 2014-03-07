@@ -156,11 +156,6 @@ void goto_intersection() {
 	}
 	stop_robot();
 }
-/**
- * initializing explore
- * See explore
- */
-int rotate_explore(int translated_direction);
 
 /**
  * translates direction for detection
@@ -170,20 +165,20 @@ int get_intersection(direction) {
 	int intersection;
 	set_count_zero();
 	if(direction == 0x20) {
-		int translated_direction[]={0x10,0x40,0x20,0x80};
-		rotate_explore(translated_direction);
+		int translated_direction[4]={0x10,0x40,0x20,0x80};
+		rotate_explore(translated_direction[4]);
 	}
 	if(direction == 0x80) {
-		int translated_direction[]={0x40,0x20,0x80,0x10};
-		rotate_explore(translated_direction);
+		int translated_direction[4]={0x40,0x20,0x80,0x10};
+		rotate_explore(translated_direction[4]);
 	}
 	if(direction == 0x10) {
-		int translated_direction[]={0x20,0x80,0x10,0x40};
-		rotate_explore(translated_direction);
+		int translated_direction[4]={0x20,0x80,0x10,0x40};
+		rotate_explore(translated_direction[4]);
 	}
 	if(direction == 0x40) {
-		int translated_direction[]={0x80,0x10,0x40,0x20};
-		rotate_explore(translated_direction);
+		int translated_direction[4]={0x80,0x10,0x40,0x20};
+		rotate_explore(translated_direction[4]);
 	}
 	return intersection;
 }
@@ -192,7 +187,7 @@ int get_intersection(direction) {
  * explore intersection
  * gives back intersection
  */
-int rotate_explore(int translated_direction) {
+int rotate_explore(int translated_direction[4]) {
 	int intersection = 0x00;
 	while(get_degree_b(360) != 1) {
 		set_velocity(60,-60);
