@@ -27,7 +27,8 @@ void set_count_zero();
 int find_way_back();
 int set_position_back(int degree);
 void goto_intersection();
-int get_intersection(direction);
+int rotate();
+int get_intersection(int direction);
 int rotate_explore(int translated_direction[4]);
 
 

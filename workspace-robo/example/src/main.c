@@ -48,6 +48,7 @@ void ecrobot_device_terminate(void) {
 
 TASK(OSEK_Main_Task) {
 	int got_intersection = 0;
+	int direction = 0x10;
 	while(1) {
 		while(is_black() == 1 && got_intersection == 0) {
 			start_robot();
@@ -58,7 +59,18 @@ TASK(OSEK_Main_Task) {
 				got_intersection = 1;
 			}
 		}
-
+		if(got_intersection == 1) {
+			if(rotate() == 0) {
+				got_intersection = 0;
+			}
+		}
+//		if(got_intersection == 1) {
+//			int intersection_type = get_intersection(direction);
+//			got_intersection = 0;
+//			display_clear(0);
+//			display_goto_xy(0,0);
+//			display_int(intersection_type,5);
+//		}
 	}
 
 	/**
@@ -66,6 +78,9 @@ TASK(OSEK_Main_Task) {
 	 * Prevent state unclear if breaking main while(1)
 	 */
 	while(1) {
+		display_clear(0);
+		display_goto_xy(0,0);
+		display_char('EXTERMINATE');
 		systick_wait_ms(1);
 	}
 }
