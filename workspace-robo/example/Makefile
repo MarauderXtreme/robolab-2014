@@ -1,7 +1,8 @@
 # Target specific macros
 TARGET = main
 TARGET_SOURCES = $(addprefix src/, \
-	main.c )
+	main.c\
+	hardware.c )
 TOPPERS_OSEK_OIL_SOURCE = ./main.oil
 
 # Don't modify below part
