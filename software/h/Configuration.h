@@ -19,7 +19,7 @@
 #define PORT "8080"
 
 // define your GROUP ID here (no umlauts!)
-#define GROUPID "robolab2014g26"
+#define GROUPID "robolab2014g26_2"
 
 // define server URL
 #define URL "http://" IP ":" PORT "/query?id=" GROUPID "&values="
