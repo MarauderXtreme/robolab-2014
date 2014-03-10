@@ -25,9 +25,16 @@
 /**
  * define speed_level
  */
-#define maxpower -80
-#define mediumpower -70
-#define lowpower -60
+#define maxpowneg -80
+#define medpowneg -70
+#define lowpowneg -60
+
+#define maxpowpos 80
+#define medpowpos 70
+#define lowpowpos 60
+
+#define powpos medpowpos
+#define powneg medpowneg
 
 /**
  * Get the light sensor data
@@ -53,7 +60,7 @@ void set_velocity(int vb,int vc) {
  * Should be pretty self-explaining
  */
 void start_robot() {
-	set_velocity(mediumpower,mediumpower);
+	set_velocity(powneg,powneg);
 }
 /**
  * See start_robot()
@@ -112,7 +119,7 @@ int find_way_back() {
 	 * turn right
 	 */
 	while(get_degree_c(30) != 1) {
-		set_velocity(-60,60);
+		set_velocity(lowpowneg,lowpowpos);
 		if(is_black() == 1) {
 			stop_robot();
 			return 1;
@@ -123,7 +130,7 @@ int find_way_back() {
 	 * turn left
 	 */
 	while(get_degree_b(30) != 1) {
-		set_velocity(60,-60);
+		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			stop_robot();
 			return 1;
@@ -152,7 +159,7 @@ void goto_intersection() {
 	stop_robot();
 	set_count_zero();
 	while(nxt_motor_get_count(B) >= -220 && nxt_motor_get_count(C) >= -220) {
-		set_velocity(mediumpower,mediumpower);
+		set_velocity(powneg,powneg);
 	}
 	stop_robot();
 }
@@ -163,7 +170,7 @@ void goto_intersection() {
 int rotate() {
 	set_count_zero();
 	while(get_degree_b(720) != 1) {
-		set_velocity(60,-60);
+		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			beep();
 		}
@@ -178,19 +185,19 @@ int rotate() {
 int get_intersection(int direction) {
 	int intersection = 0x00;
 	if(direction == 0x20) {
-		int translated_direction[4]={0x10,0x40,0x20,0x80};
-		intersection = rotate_explore(&translated_direction[4]);
-	}
-	if(direction == 0x80) {
 		int translated_direction[4]={0x40,0x20,0x80,0x10};
 		intersection = rotate_explore(&translated_direction[4]);
 	}
-	if(direction == 0x10) {
+	if(direction == 0x80) {
 		int translated_direction[4]={0x20,0x80,0x10,0x40};
 		intersection = rotate_explore(&translated_direction[4]);
 	}
-	if(direction == 0x40) {
+	if(direction == 0x10) {
 		int translated_direction[4]={0x80,0x10,0x40,0x20};
+		intersection = rotate_explore(&translated_direction[4]);
+	}
+	if(direction == 0x40) {
+		int translated_direction[4]={0x10,0x40,0x20,0x80};
 		intersection = rotate_explore(&translated_direction[4]);
 	}
 	return intersection;
@@ -204,7 +211,7 @@ int rotate_explore(int translated_direction[4]) {
 	int intersection = 0x00;
 	set_count_zero();
 	while(get_degree_b(360) != 1) {
-		set_velocity(60,-60);
+		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) <= 60) {
 			intersection = intersection + translated_direction[0];
 		}
