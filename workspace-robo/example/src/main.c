@@ -44,43 +44,40 @@ void ecrobot_device_terminate(void) {
 	ecrobot_set_light_sensor_inactive(S1);
 }
 
-
-
 TASK(OSEK_Main_Task) {
 	int got_intersection = 0;
+	// Tells us where we came from
 	int direction = 0x10;
 	while(1) {
-		while(is_black() == 1 && got_intersection == 0) {
+		while(is_black() == 1 && get_token() == 0 && got_intersection == 0) {
 			start_robot();
 		}
-		if(is_black() == 0  && got_intersection == 0) {
+		if(get_token() == 1) {
+			systick_wait_ms(10000);
+		}
+		if(is_black() == 0 && get_token() == 0  && got_intersection == 0) {
 			if(find_way_back() == 0) {
 				goto_intersection();
 				got_intersection = 1;
 			}
 		}
 		if(got_intersection == 1) {
-			if(rotate() == 0) {
-				got_intersection = 0;
-			}
+			get_intersection(direction); //int intersection_type =
+			stop_robot();
+			move(1,0,direction);
+			got_intersection = 0;
 		}
-//		if(got_intersection == 1) {
-//			int intersection_type = get_intersection(direction);
-//			got_intersection = 0;
-//			display_clear(0);
-//			display_goto_xy(0,0);
-//			display_int(intersection_type,5);
-//		}
 	}
 
 	/**
 	 * DO NOT DELETE THIS METHOD
 	 * Prevent state unclear if breaking main while(1)
 	 */
+	display_clear(0);
+	display_goto_xy(0,0);
+	display_char('EXTERMINATE');
+	display_update();
 	while(1) {
-		display_clear(0);
-		display_goto_xy(0,0);
-		display_char('EXTERMINATE');
 		systick_wait_ms(1);
 	}
 }

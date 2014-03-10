@@ -25,9 +25,16 @@
 /**
  * define speed_level
  */
-#define maxpower -80
-#define mediumpower -70
-#define lowpower -60
+#define maxpowneg -80
+#define medpowneg -70
+#define lowpowneg -65
+
+#define maxpowpos 80
+#define medpowpos 70
+#define lowpowpos 65
+
+#define powpos medpowpos
+#define powneg medpowneg
 
 /**
  * Get the light sensor data
@@ -53,7 +60,7 @@ void set_velocity(int vb,int vc) {
  * Should be pretty self-explaining
  */
 void start_robot() {
-	set_velocity(mediumpower,mediumpower);
+	set_velocity(powneg,powneg);
 }
 /**
  * See start_robot()
@@ -93,6 +100,19 @@ int get_degree_c(int degree) {
 	if(nxt_motor_get_count(C) >= degree) return 1;
 	return 0;
 }
+
+/**
+ * Detect the token over touch
+ * 1/TRUE when Touch-Sensor is 1
+ */
+int get_token() {
+	if(ecrobot_get_touch_sensor(S2) == 1 || ecrobot_get_touch_sensor(S3) == 1) {
+		stop_robot();
+		beep();
+		return 1;
+	}
+	return 0;
+}
 /**
  * Initialize the servo degree counter
  */
@@ -111,8 +131,8 @@ int find_way_back() {
 	/**
 	 * turn right
 	 */
-	while(get_degree_c(30) != 1) {
-		set_velocity(-60,60);
+	while(get_degree_c(40) != 1) {
+		set_velocity(lowpowneg,lowpowpos);
 		if(is_black() == 1) {
 			stop_robot();
 			return 1;
@@ -122,8 +142,8 @@ int find_way_back() {
 	/**
 	 * turn left
 	 */
-	while(get_degree_b(30) != 1) {
-		set_velocity(60,-60);
+	while(get_degree_b(40) != 1) {
+		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			stop_robot();
 			return 1;
@@ -146,29 +166,15 @@ int set_position_back(int degree) {
  * moves on to intersection
  */
 void goto_intersection() {
-	while(set_position_back(-30) != 1) {
-		set_velocity(-60,60);
+	while(set_position_back(-20) != 1) {
+		set_velocity(lowpowneg,lowpowpos);
 	}
 	stop_robot();
 	set_count_zero();
-	while(nxt_motor_get_count(B) >= -220 && nxt_motor_get_count(C) >= -220) {
-		set_velocity(mediumpower,mediumpower);
+	while(nxt_motor_get_count(B) >= -200 && nxt_motor_get_count(C) >= -200) {
+		set_velocity(powneg,powneg);
 	}
 	stop_robot();
-}
-
-/**
- * First debug rotation
- */
-int rotate() {
-	set_count_zero();
-	while(get_degree_b(720) != 1) {
-		set_velocity(60,-60);
-		if(is_black() == 1) {
-			beep();
-		}
-	}
-	return 0;
 }
 
 /**
@@ -178,45 +184,185 @@ int rotate() {
 int get_intersection(int direction) {
 	int intersection = 0x00;
 	if(direction == 0x20) {
-		int translated_direction[4]={0x10,0x40,0x20,0x80};
-		intersection = rotate_explore(&translated_direction[4]);
+		int translated_direction[4]={0x40,0x20,0x80,0x10};
+		intersection = rotate_explore(translated_direction);
 	}
 	if(direction == 0x80) {
-		int translated_direction[4]={0x40,0x20,0x80,0x10};
-		intersection = rotate_explore(&translated_direction[4]);
+		int translated_direction[4]={0x20,0x80,0x10,0x40};
+		intersection = rotate_explore(translated_direction);
 	}
 	if(direction == 0x10) {
-		int translated_direction[4]={0x20,0x80,0x10,0x40};
-		intersection = rotate_explore(&translated_direction[4]);
+		int translated_direction[4]={0x80,0x10,0x40,0x20};
+		intersection = rotate_explore(translated_direction);
 	}
 	if(direction == 0x40) {
-		int translated_direction[4]={0x80,0x10,0x40,0x20};
-		intersection = rotate_explore(&translated_direction[4]);
+		int translated_direction[4]={0x10,0x40,0x20,0x80};
+		intersection = rotate_explore(translated_direction);
 	}
 	return intersection;
 }
+
 /**
  * rotate robot and
  * explore intersection
  * gives back intersection
  */
 int rotate_explore(int translated_direction[4]) {
-	int intersection = 0x00;
+	int intersection = 0;
 	set_count_zero();
-	while(get_degree_b(360) != 1) {
-		set_velocity(60,-60);
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 60) {
-			intersection = intersection + translated_direction[0];
+	int first_flag = 0;
+	int second_flag = 0;
+	int third_flag = 0;
+	int fourth_flag = 0;
+	while(get_degree_b(900) != 1) {
+		set_velocity(medpowpos,medpowneg);
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 200 && nxt_motor_get_count(B) <= 270) {
+			first_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 150) {
-			intersection = intersection + translated_direction[1];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 370 && nxt_motor_get_count(B) <= 440) {
+			second_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 240) {
-			intersection = intersection + translated_direction[2];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 570 && nxt_motor_get_count(B) <= 640) {
+			third_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 330) {
-			intersection = intersection + translated_direction[3];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 770 && nxt_motor_get_count(B) <= 840) {
+			fourth_flag = 1;
 		}
 	}
+	if(first_flag == 1) {
+		intersection = intersection + translated_direction[0];
+	}
+	if(second_flag == 1) {
+		intersection = intersection + translated_direction[1];
+	}
+	if(third_flag == 1) {
+		intersection = intersection + translated_direction[2];
+	}
+	if(fourth_flag == 1) {
+		intersection = intersection + translated_direction[3];
+	}
 	return intersection;
+}
+
+void move(int posx, int posy, int direction) {
+	int x = posx - actposx;
+	int y = posy - actposy;
+	actposx = posx;
+	actposy = posy;
+	rotate(x,y,direction);
+}
+
+void turn_left() {
+	while(get_degree_b(230) != 1) {
+		set_velocity(medpowpos,medpowneg);
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 140 && nxt_motor_get_count(B) <= 230) {
+			return;
+		}
+	}
+}
+void turn_right() {
+	while(get_degree_c(400) != 1) {
+		set_velocity(medpowneg,medpowpos);
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 230 && nxt_motor_get_count(C) <= 400) {
+			return;
+		}
+	}
+}
+void turn_back() {
+	while(get_degree_b(400) != 1) {
+		set_velocity(medpowpos,medpowneg);
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 230 && nxt_motor_get_count(B) <= 400) {
+			return;
+		}
+	}
+}
+void turn_straight() {
+	while(get_degree_c(200) != 1) {
+		set_velocity(medpowneg,medpowpos);
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 50 && nxt_motor_get_count(C) <= 200) {
+			return;
+		}
+	}
+}
+
+void rotate(int x, int y, int direction) {
+	set_count_zero();
+	switch (direction) {
+		case 0x10:
+			if(x == 0 && y == -1) {
+				turn_right();
+				direction = 0x80;
+			}
+			if(x == 0 && y == 1) {
+				turn_left();
+				direction = 0x40;
+			}
+			if(x == -1 && y == 0) {
+				turn_back();
+				direction = 0x20;
+			}
+			if(x == 1 && y == 0) {
+				turn_straight();
+				direction = 0x10;
+			}
+			break;
+		case 0x20:
+			if(x == 0 && y == 1) {
+				turn_right();
+				direction = 0x40;
+			}
+			if(x == 0 && y == -1) {
+				turn_left();
+				direction = 0x80;
+			}
+			if(x == 1 && y == 0) {
+				turn_back();
+				direction = 0x10;
+			}
+			if(x == -1 && y == 0) {
+				turn_straight();
+				direction = 0x20;
+			}
+			break;
+		case 0x40:
+			if(x == 1 && y == 0) {
+				turn_right();
+				direction = 0x10;
+			}
+			if(x == -1 && y == 0) {
+				turn_left();
+				direction = 0x20;
+			}
+			if(x == 0 && y == -1) {
+				turn_back();
+				direction = 0x80;
+			}
+			if(x == 0 && y == 1) {
+				turn_straight();
+				direction = 0x40;
+			}
+			break;
+		case 0x80:
+			if(x == -1 && y == 0) {
+				turn_right();
+				direction = 0x20;
+			}
+			if(x == 1 && y == 0) {
+				turn_left();
+				direction = 0x10;
+			}
+			if(x == 0 && y == 1) {
+				turn_back();
+				direction = 0x40;
+			}
+			if(x == 0 && y == -1) {
+				turn_straight();
+				direction = 0x80;
+			}
+			break;
+		default:
+			beep();
+			break;
+	}
+	return;
 }
