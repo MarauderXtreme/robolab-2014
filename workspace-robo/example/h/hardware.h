@@ -23,6 +23,7 @@ void beep();
 int is_black();
 int get_degree_b(int degree);
 int get_degree_c(int degree);
+int get_token();
 void set_count_zero();
 int find_way_back();
 int set_position_back(int degree);

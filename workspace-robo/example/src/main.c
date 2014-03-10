@@ -50,10 +50,10 @@ TASK(OSEK_Main_Task) {
 	int got_intersection = 0;
 	int direction = 0x10;
 	while(1) {
-		while(is_black() == 1 && got_intersection == 0) {
+		while(is_black() == 1 && get_token() == 0 && got_intersection == 0) {
 			start_robot();
 		}
-		if(is_black() == 0  && got_intersection == 0) {
+		if(is_black() == 0 && get_token() == 0  && got_intersection == 0) {
 			if(find_way_back() == 0) {
 				goto_intersection();
 				got_intersection = 1;

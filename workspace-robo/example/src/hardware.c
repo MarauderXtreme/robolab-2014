@@ -27,11 +27,11 @@
  */
 #define maxpowneg -80
 #define medpowneg -70
-#define lowpowneg -60
+#define lowpowneg -65
 
 #define maxpowpos 80
 #define medpowpos 70
-#define lowpowpos 60
+#define lowpowpos 65
 
 #define powpos medpowpos
 #define powneg medpowneg
@@ -100,6 +100,19 @@ int get_degree_c(int degree) {
 	if(nxt_motor_get_count(C) >= degree) return 1;
 	return 0;
 }
+
+/**
+ * Detect the token over touch
+ * 1/TRUE when Touch-Sensor is 1
+ */
+int get_token() {
+	if(ecrobot_get_touch_sensor(S2) == 1 || ecrobot_get_touch_sensor(S3) == 1) {
+		stop_robot();
+		beep();
+		return 1;
+	}
+	return 0;
+}
 /**
  * Initialize the servo degree counter
  */
@@ -118,7 +131,7 @@ int find_way_back() {
 	/**
 	 * turn right
 	 */
-	while(get_degree_c(30) != 1) {
+	while(get_degree_c(40) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 		if(is_black() == 1) {
 			stop_robot();
@@ -129,7 +142,7 @@ int find_way_back() {
 	/**
 	 * turn left
 	 */
-	while(get_degree_b(30) != 1) {
+	while(get_degree_b(40) != 1) {
 		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			stop_robot();
@@ -153,8 +166,8 @@ int set_position_back(int degree) {
  * moves on to intersection
  */
 void goto_intersection() {
-	while(set_position_back(-30) != 1) {
-		set_velocity(-60,60);
+	while(set_position_back(-20) != 1) {
+		set_velocity(lowpowneg,lowpowpos);
 	}
 	stop_robot();
 	set_count_zero();
@@ -169,10 +182,14 @@ void goto_intersection() {
  */
 int rotate() {
 	set_count_zero();
-	while(get_degree_b(720) != 1) {
-		set_velocity(lowpowpos,lowpowneg);
+	while(get_degree_b(1000) != 1) {
+		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1) {
 			beep();
+			display_clear(0);
+			display_goto_xy(0,0);
+			display_int(nxt_motor_get_count(B),5);
+			display_update();
 		}
 	}
 	return 0;
@@ -211,7 +228,7 @@ int rotate_explore(int translated_direction[4]) {
 	int intersection = 0x00;
 	set_count_zero();
 	while(get_degree_b(360) != 1) {
-		set_velocity(lowpowpos,lowpowneg);
+		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) <= 60) {
 			intersection = intersection + translated_direction[0];
 		}
@@ -224,6 +241,7 @@ int rotate_explore(int translated_direction[4]) {
 		if(is_black() == 1 && nxt_motor_get_count(B) <= 330) {
 			intersection = intersection + translated_direction[3];
 		}
+
 	}
 	return intersection;
 }
