@@ -231,6 +231,7 @@ struct POINT *pop(int count)
 
 struct POINT *mark_point(int x, int y, int inter)
 {
+	points[x][y].exist = 1;
 	points[x][y].detected = 1;
 	points[x][y].x = x;
 	points[x][y].y = y;
@@ -238,6 +239,10 @@ struct POINT *mark_point(int x, int y, int inter)
 	if(inter & EAST)
 	{
 		MARK_EAST(points[x][y]);
+		MARK_WEST(points[x][y + 1]);
+		points[x][y + 1].x = x;
+		points[x][y + 1].y = y + 1;
+		points[x][y + 1].exist = 1;
 		if(points[x][y + 1].detected)
 		{
 			GO_EAST(points[x][y]);
@@ -248,6 +253,10 @@ struct POINT *mark_point(int x, int y, int inter)
 	if(inter & SOUTH)
 	{
 		MARK_SOUTH(points[x][y]);
+		MARK_NORTH(points[x + 1][y]);
+		points[x + 1][y].x = x + 1;
+		points[x + 1][y].y = y;
+		points[x + 1][y].exist = 1;
 		if(points[x + 1][y].detected)
 		{
 			GO_SOUTH(points[x][y]);
@@ -258,6 +267,10 @@ struct POINT *mark_point(int x, int y, int inter)
 	if(inter & WEST)
 	{
 		MARK_WEST(points[x][y]);
+		MARK_EAST(points[x][y - 1]);
+		points[x][y - 1].x = x;
+		points[x][y - 1].y = y - 1;
+		points[x][y - 1].exist = 1;
 		if(points[x][y - 1].detected)
 		{
 			GO_WEST(points[x][y]);
@@ -268,6 +281,10 @@ struct POINT *mark_point(int x, int y, int inter)
 	if(inter & NORTH)
 	{
 		MARK_NORTH(points[x][y]);
+		MARK_SOUTH(points[x - 1][y]);
+		points[x - 1][y].x = x - 1;
+		points[x - 1][y].y = y;
+		points[x - 1][y].exist = 1;
 		if(points[x - 1][y].detected)
 		{
 			GO_NORTH(points[x][y]);
@@ -331,10 +348,27 @@ struct POINT *get_last_open_point()
 	{
 		s = &stack[sp];
 		p = &points[s->x][s->y];
-		if(IS_OPEN_POINT(*p))
-			break;
-		else
-			sp--;
+		if(HAS_EAST(*p))
+		{
+			if(points[p->x][p->y + 1].detected == 0)
+				break;
+		}
+		if(HAS_SOUTH(*p))
+		{
+			if(points[p->x + 1][p->y].detected == 0)
+				break;
+		}
+		if(HAS_WEST(*p))
+		{
+			if(points[p->x][p->y - 1].detected == 0)
+				break;
+		}
+		if(HAS_NORTH(*p))
+		{
+			if(points[p->x - 1][p->y].detected == 0)
+				break;
+		}
+		sp--;
 	}
 
 	//if there is no any open point in stack, return the point in stack[0]
@@ -363,51 +397,63 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 	}
 	dist[start_x][start_y] = 0;
 
+	//empty global queue
+	queue_start = QUEUE_INVALID;
+	queue_end = QUEUE_INVALID;
 	//start from top of points' stack
-	sp = stack_pointer;
-	s = &stack[sp];
+	p = &points[start_x][start_y];
+	queue_append(p);
 
-	end_index = get_stack_index(end_x, end_y);
-	target_p = &points[end_x][end_y];
-	while(sp >= end_index)
+	//end_index = get_stack_index(end_x, end_y);
+	//target_p = &points[end_x][end_y];
+	do
 	{
-		p = extract_min(sp, end_index);
+		//p = extract_min(sp, end_index);
+		p = queue_fetch();
 		if(p)
 		{
-			if(HAS_EAST(*p) && VISITED_EAST(*p))
+			if(HAS_EAST(*p))
 			{
 				x = p->x;
 				y = p->y + 1;
+				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
+					queue_append(&points[x][y]);
 				if(dist[x][y] > (dist[p->x][p->y] + 1))
 				{
 					dist[x][y] = dist[p->x][p->y] + 1;
 					prev[x][y] = &points[p->x][p->y];
 				}
 			}
-			if(HAS_SOUTH(*p) && VISITED_SOUTH(*p))
+			if(HAS_SOUTH(*p))
 			{
 				x = p->x + 1;
 				y = p->y;
+				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
+					queue_append(&points[x][y]);
 				if(dist[x][y] > (dist[p->x][p->y] + 1))
 				{
 					dist[x][y] = dist[p->x][p->y] + 1;
 					prev[x][y] = &points[p->x][p->y];
 				}
 			}
-			if(HAS_WEST(*p) && VISITED_WEST(*p))
+			if(HAS_WEST(*p))
 			{
 				x = p->x;
 				y = p->y - 1;
+				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
+					queue_append(&points[x][y]);
 				if(dist[x][y] > (dist[p->x][p->y] + 1))
 				{
 					dist[x][y] = dist[p->x][p->y] + 1;
 					prev[x][y] = &points[p->x][p->y];
 				}
 			}
-			if(HAS_NORTH(*p) && VISITED_NORTH(*p))
+			if(HAS_NORTH(*p))
 			{
 				x = p->x - 1;
 				y = p->y;
+				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
+					queue_append(&points[x][y]);
 				if(dist[x][y] > (dist[p->x][p->y] + 1))
 				{
 					dist[x][y] = dist[p->x][p->y] + 1;
@@ -415,10 +461,10 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 				}
 			}
 
-			sp--;
-			s = &stack[sp];
+			//sp--;
+			//s = &stack[sp];
 		}
-	}
+	}while(queue_length());
 
 	//the shortest path to target point was found
 	//empty shortest path stack
@@ -472,6 +518,44 @@ struct POINT *extract_min(int start, int end)
 	}
 
 	return p;
+}
+
+int queue_append(struct POINT *p)
+{
+	if(p)
+	{
+		queue_end++;
+		queue[queue_end] = p;
+
+		if(queue_start == QUEUE_INVALID)
+			queue_start++;
+	}
+
+	return 0;
+}
+
+struct POINT *queue_fetch()
+{
+	struct POINT *p = NULL;
+
+	if(queue_start != QUEUE_INVALID)
+	{
+		p = queue[queue_start];
+		queue_start++;
+
+		if(queue_end < queue_start)
+		{
+			queue_start = QUEUE_INVALID;
+			queue_end = QUEUE_INVALID;
+		}
+	}
+
+	return p;
+}
+
+int queue_length()
+{
+	return (queue_start == -1)?0:(queue_end - queue_start + 1);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -528,6 +612,23 @@ int print_stack()
 	printf("\n");
 
 	return 0;
+}
+
+int print_queue()
+{
+	int qp;
+
+	printf("Queue: ");
+	for(qp = queue_start;qp <= queue_end;qp++)
+		printf("(%d, %d) ", queue[qp]->x, queue[qp]->y);
+	printf("\n");
+
+	return 0;
+
+}
+
+int print_path()
+{
 }
 
 int main(void) {
