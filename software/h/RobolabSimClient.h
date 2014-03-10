@@ -1,13 +1,15 @@
 #ifndef __ROBOLIBSIM_H__
 #define __ROBOLIBSIM_H__
 
-#define STACK_LENGTH 50
+#define STACK_LENGTH 128
+#define QUEUE_LENGTH 128
 #define MAX_LENGTH 13
 #define MAX_WIDTH 7
 #define TOKEN_COUNT 3
 #define DIST_INFINITY 128
 #define UNKOWN 1024
 #define STACK_INVALID -1
+#define QUEUE_INVALID -1
 #define START_X 0
 #define START_Y 0
 
@@ -47,6 +49,7 @@ struct POINT
 {
 	int x;
 	int y;
+	int exist;
 	int detected;
 	int inter;
 	int has_token;
@@ -63,6 +66,7 @@ struct POINT points[MAX_LENGTH][MAX_WIDTH];
 struct STACK stack[STACK_LENGTH];
 int dist[MAX_LENGTH][MAX_WIDTH];
 struct POINT *shortest_path[DIST_INFINITY];
+struct POINT *queue[QUEUE_LENGTH];
 struct POINT *prev[MAX_LENGTH][MAX_WIDTH];
 
 //definition of functions
@@ -77,14 +81,21 @@ struct POINT *get_last_open_point();
 int find_shortest_path(int start_x, int start_y, int end_x, int end_y);
 struct POINT *extract_min(int, int);
 int get_stack_index(int, int);
+int queue_append(struct POINT *);
+struct POINT *queue_fetch();
+int queue_length();
 
 //global variables
 int stack_pointer = STACK_INVALID;
+int queue_start = QUEUE_INVALID;
+int queue_end = QUEUE_INVALID;
 
 //for debugging
 int print_direction(struct POINT *cur_p, int);
 int print_intersection(int);
 int print_point(struct POINT*);
 int print_stack();
+int print_queue();
+int print_path();
 
 #endif
