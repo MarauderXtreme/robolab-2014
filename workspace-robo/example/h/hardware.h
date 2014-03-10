@@ -14,6 +14,8 @@
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
 
+int actposx = 0;
+int actposy = 0;
 
 void display_message();
 void set_velocity(int vb,int vc);
@@ -28,9 +30,14 @@ void set_count_zero();
 int find_way_back();
 int set_position_back(int degree);
 void goto_intersection();
-int rotate();
 int get_intersection(int direction);
 int rotate_explore(int translated_direction[4]);
+void move(int posx, int posy, int direction);
+void turn_left();
+void turn_right();
+void turn_back();
+void turn_straight();
+void rotate(int x, int y, int direction);
 
 
 #endif /* HARDWARE_H_ */

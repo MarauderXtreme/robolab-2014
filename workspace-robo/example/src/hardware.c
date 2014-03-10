@@ -171,28 +171,10 @@ void goto_intersection() {
 	}
 	stop_robot();
 	set_count_zero();
-	while(nxt_motor_get_count(B) >= -220 && nxt_motor_get_count(C) >= -220) {
+	while(nxt_motor_get_count(B) >= -200 && nxt_motor_get_count(C) >= -200) {
 		set_velocity(powneg,powneg);
 	}
 	stop_robot();
-}
-
-/**
- * First debug rotation
- */
-int rotate() {
-	set_count_zero();
-	while(get_degree_b(1000) != 1) {
-		set_velocity(medpowpos,medpowneg);
-		if(is_black() == 1) {
-			beep();
-			display_clear(0);
-			display_goto_xy(0,0);
-			display_int(nxt_motor_get_count(B),5);
-			display_update();
-		}
-	}
-	return 0;
 }
 
 /**
@@ -200,25 +182,26 @@ int rotate() {
  * gives back the type of the actual intersection
  */
 int get_intersection(int direction) {
-	int intersection = 0;
-	if(direction == 32) {
-		int translated_direction[4]={64,32,128,16};
+	int intersection = 0x00;
+	if(direction == 0x20) {
+		int translated_direction[4]={0x40,0x20,0x80,0x10};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 128) {
-		int translated_direction[4]={32,128,16,64};
+	if(direction == 0x80) {
+		int translated_direction[4]={0x20,0x80,0x10,0x40};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 16) {
-		int translated_direction[4]={128,16,64,32};
+	if(direction == 0x10) {
+		int translated_direction[4]={0x80,0x10,0x40,0x20};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 64) {
-		int translated_direction[4]={16,64,32,128};
+	if(direction == 0x40) {
+		int translated_direction[4]={0x10,0x40,0x20,0x80};
 		intersection = rotate_explore(translated_direction);
 	}
 	return intersection;
 }
+
 /**
  * rotate robot and
  * explore intersection
@@ -259,4 +242,127 @@ int rotate_explore(int translated_direction[4]) {
 		intersection = intersection + translated_direction[3];
 	}
 	return intersection;
+}
+
+void move(int posx, int posy, int direction) {
+	int x = posx - actposx;
+	int y = posy - actposy;
+	actposx = posx;
+	actposy = posy;
+	rotate(x,y,direction);
+}
+
+void turn_left() {
+	while(get_degree_b(230) != 1) {
+		set_velocity(medpowpos,medpowneg);
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 140 && nxt_motor_get_count(B) <= 230) {
+			return;
+		}
+	}
+}
+void turn_right() {
+	while(get_degree_c(400) != 1) {
+		set_velocity(medpowneg,medpowpos);
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 230 && nxt_motor_get_count(C) <= 400) {
+			return;
+		}
+	}
+}
+void turn_back() {
+	while(get_degree_b(400) != 1) {
+		set_velocity(medpowpos,medpowneg);
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 230 && nxt_motor_get_count(B) <= 400) {
+			return;
+		}
+	}
+}
+void turn_straight() {
+	while(get_degree_c(200) != 1) {
+		set_velocity(medpowneg,medpowpos);
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 50 && nxt_motor_get_count(C) <= 200) {
+			return;
+		}
+	}
+}
+
+void rotate(int x, int y, int direction) {
+	set_count_zero();
+	switch (direction) {
+		case 0x10:
+			if(x == 0 && y == -1) {
+				turn_right();
+				direction = 0x80;
+			}
+			if(x == 0 && y == 1) {
+				turn_left();
+				direction = 0x40;
+			}
+			if(x == -1 && y == 0) {
+				turn_back();
+				direction = 0x20;
+			}
+			if(x == 1 && y == 0) {
+				turn_straight();
+				direction = 0x10;
+			}
+			break;
+		case 0x20:
+			if(x == 0 && y == 1) {
+				turn_right();
+				direction = 0x40;
+			}
+			if(x == 0 && y == -1) {
+				turn_left();
+				direction = 0x80;
+			}
+			if(x == 1 && y == 0) {
+				turn_back();
+				direction = 0x10;
+			}
+			if(x == -1 && y == 0) {
+				turn_straight();
+				direction = 0x20;
+			}
+			break;
+		case 0x40:
+			if(x == 1 && y == 0) {
+				turn_right();
+				direction = 0x10;
+			}
+			if(x == -1 && y == 0) {
+				turn_left();
+				direction = 0x20;
+			}
+			if(x == 0 && y == -1) {
+				turn_back();
+				direction = 0x80;
+			}
+			if(x == 0 && y == 1) {
+				turn_straight();
+				direction = 0x40;
+			}
+			break;
+		case 0x80:
+			if(x == -1 && y == 0) {
+				turn_right();
+				direction = 0x20;
+			}
+			if(x == 1 && y == 0) {
+				turn_left();
+				direction = 0x10;
+			}
+			if(x == 0 && y == 1) {
+				turn_back();
+				direction = 0x40;
+			}
+			if(x == 0 && y == -1) {
+				turn_straight();
+				direction = 0x80;
+			}
+			break;
+		default:
+			beep();
+			break;
+	}
+	return;
 }
