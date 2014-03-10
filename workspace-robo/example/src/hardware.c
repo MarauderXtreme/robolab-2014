@@ -200,22 +200,22 @@ int rotate() {
  * gives back the type of the actual intersection
  */
 int get_intersection(int direction) {
-	int intersection = 0x00;
-	if(direction == 0x20) {
-		int translated_direction[4]={0x40,0x20,0x80,0x10};
-		intersection = rotate_explore(&translated_direction[4]);
+	int intersection = 0;
+	if(direction == 32) {
+		int translated_direction[4]={64,32,128,16};
+		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x80) {
-		int translated_direction[4]={0x20,0x80,0x10,0x40};
-		intersection = rotate_explore(&translated_direction[4]);
+	if(direction == 128) {
+		int translated_direction[4]={32,128,16,64};
+		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x10) {
-		int translated_direction[4]={0x80,0x10,0x40,0x20};
-		intersection = rotate_explore(&translated_direction[4]);
+	if(direction == 16) {
+		int translated_direction[4]={128,16,64,32};
+		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x40) {
-		int translated_direction[4]={0x10,0x40,0x20,0x80};
-		intersection = rotate_explore(&translated_direction[4]);
+	if(direction == 64) {
+		int translated_direction[4]={16,64,32,128};
+		intersection = rotate_explore(translated_direction);
 	}
 	return intersection;
 }
@@ -225,23 +225,38 @@ int get_intersection(int direction) {
  * gives back intersection
  */
 int rotate_explore(int translated_direction[4]) {
-	int intersection = 0x00;
+	int intersection = 0;
 	set_count_zero();
-	while(get_degree_b(360) != 1) {
+	int first_flag = 0;
+	int second_flag = 0;
+	int third_flag = 0;
+	int fourth_flag = 0;
+	while(get_degree_b(900) != 1) {
 		set_velocity(medpowpos,medpowneg);
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 60) {
-			intersection = intersection + translated_direction[0];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 200 && nxt_motor_get_count(B) <= 270) {
+			first_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 150) {
-			intersection = intersection + translated_direction[1];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 370 && nxt_motor_get_count(B) <= 440) {
+			second_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 240) {
-			intersection = intersection + translated_direction[2];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 570 && nxt_motor_get_count(B) <= 640) {
+			third_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) <= 330) {
-			intersection = intersection + translated_direction[3];
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 770 && nxt_motor_get_count(B) <= 840) {
+			fourth_flag = 1;
 		}
-
+	}
+	if(first_flag == 1) {
+		intersection = intersection + translated_direction[0];
+	}
+	if(second_flag == 1) {
+		intersection = intersection + translated_direction[1];
+	}
+	if(third_flag == 1) {
+		intersection = intersection + translated_direction[2];
+	}
+	if(fourth_flag == 1) {
+		intersection = intersection + translated_direction[3];
 	}
 	return intersection;
 }
