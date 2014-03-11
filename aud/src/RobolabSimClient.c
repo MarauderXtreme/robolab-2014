@@ -38,7 +38,7 @@ int start_finding(int start_x, int start_y)
 			#ifdef DEBUG
 			ret = aud_move(cur_p, dir);
 			#else
-			ret = move(cur_p->x, cur->y, dir);	//ROBOT_INTERFACE
+			ret = move(cur_p->x, cur_p->y, dir);	//ROBOT_INTERFACE
 			#endif
 			//update current point
 			switch(dir)
