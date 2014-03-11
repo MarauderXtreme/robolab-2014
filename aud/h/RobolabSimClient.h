@@ -37,6 +37,7 @@
 #define QUEUE_INVALID -1
 #define START_X 7
 #define START_Y 6
+#define NULL 0x00
 
 #define MARK_EAST(POINT) ((POINT).inter |= EAST)
 #define MARK_SOUTH(POINT) ((POINT).inter |= SOUTH)

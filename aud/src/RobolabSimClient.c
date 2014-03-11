@@ -114,7 +114,7 @@ int start_finding(int start_x, int start_y)
 								dir = WEST;
 							else if((cur_p->y - tmp_p->y) == -1) //go north
 								dir = NORTH;
-							move(tmp_p->x, tmp_y->y, dir);
+							move(tmp_p->x, tmp_p->y, dir);
 							#endif
 							cur_p = tmp_p;
 							ppath--;
@@ -704,5 +704,5 @@ int print_path()
 int main(void) {
 	start_finding(START_X, START_Y);
 
-	return EXIT_SUCCESS;
+	return 0;
 }
