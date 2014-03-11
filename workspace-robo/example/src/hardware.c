@@ -131,7 +131,7 @@ int find_way_back() {
 	/**
 	 * turn right
 	 */
-	while(get_degree_c(40) != 1) {
+	while(get_degree_c(130) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 		if(is_black() == 1) {
 			stop_robot();
@@ -142,7 +142,7 @@ int find_way_back() {
 	/**
 	 * turn left
 	 */
-	while(get_degree_b(40) != 1) {
+	while(get_degree_b(130) != 1) {
 		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			stop_robot();

@@ -1,5 +1,6 @@
 #include "../h/main.h"
 #include "../h/hardware.h"
+#include "../h/RobolabSimClient.h"
 
 /**
  * Define S Ports
@@ -90,10 +91,11 @@ TASK(OSEK_Main_Task) {
 		if(got_intersection == 1) {
 			get_intersection(direction); //int intersection_type =
 			stop_robot();
-			move(1,0,direction);
+			move(0,-1,direction);
 			got_intersection = 0;
 		}
 	}
+	//start_finding(START_X, START_Y);
 
 	/**
 	 * DO NOT DELETE THIS METHOD
