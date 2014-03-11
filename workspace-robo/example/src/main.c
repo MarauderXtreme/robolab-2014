@@ -75,11 +75,11 @@ TASK(OSEK_Main_Task) {
 	 * DO NOT DELETE THIS METHOD
 	 * Prevent state unclear if breaking main while(1)
 	 */
-	/*display_clear(0);
+	display_clear(0);
 	display_goto_xy(0,0);
 	display_char('EXTERMINATE');
 	display_update();
 	while(1) {
 		systick_wait_ms(1);
-	}*/
+	}
 }
