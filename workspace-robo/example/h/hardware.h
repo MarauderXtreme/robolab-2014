@@ -38,6 +38,7 @@ void turn_right();
 void turn_back();
 void turn_straight();
 void rotate(int x, int y, int direction);
+int driver(int, int, int);
 
 
 #endif /* HARDWARE_H_ */
