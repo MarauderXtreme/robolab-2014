@@ -256,6 +256,7 @@ void turn_left() {
 	while(get_degree_b(230) != 1) {
 		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 140 && nxt_motor_get_count(B) <= 230) {
+			stop_robot();
 			return;
 		}
 	}
@@ -264,6 +265,7 @@ void turn_right() {
 	while(get_degree_c(400) != 1) {
 		set_velocity(medpowneg,medpowpos);
 		if(is_black() == 1 && nxt_motor_get_count(C) >= 230 && nxt_motor_get_count(C) <= 400) {
+			stop_robot();
 			return;
 		}
 	}
@@ -272,6 +274,7 @@ void turn_back() {
 	while(get_degree_b(400) != 1) {
 		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 230 && nxt_motor_get_count(B) <= 400) {
+			stop_robot();
 			return;
 		}
 	}
@@ -280,6 +283,7 @@ void turn_straight() {
 	while(get_degree_c(200) != 1) {
 		set_velocity(medpowneg,medpowpos);
 		if(is_black() == 1 && nxt_motor_get_count(C) >= 50 && nxt_motor_get_count(C) <= 200) {
+			stop_robot();
 			return;
 		}
 	}
