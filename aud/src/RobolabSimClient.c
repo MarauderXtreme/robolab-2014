@@ -1,4 +1,6 @@
+#ifdef DEBUG
 #include "../h/RobotProxy.h"
+#endif
 #include "../h/RobolabSimClient.h"
 
 //implemetation of functions
