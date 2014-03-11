@@ -2,7 +2,8 @@
 TARGET = main
 TARGET_SOURCES = $(addprefix src/, \
 	main.c\
-	hardware.c )
+	hardware.c)
+#	aud.c)
 TOPPERS_OSEK_OIL_SOURCE = ./main.oil
 
 # Don't modify below part

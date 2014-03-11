@@ -166,7 +166,7 @@ int set_position_back(int degree) {
  * moves on to intersection
  */
 void goto_intersection() {
-	while(set_position_back(-20) != 1) {
+	while(set_position_back(-30) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 	}
 	stop_robot();
