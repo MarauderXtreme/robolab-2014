@@ -1,6 +1,4 @@
-#ifdef DEBUG
 #include "../h/RobotProxy.h"
-#endif
 #include "../h/RobolabSimClient.h"
 
 //implemetation of functions
@@ -17,7 +15,12 @@ int start_finding(int start_x, int start_y)
 	int ret;
 	int steps = 0;
 
+	#ifdef DEBUG
 	inter = Robot_GetIntersections();
+	#else
+	inter =  get_intersection();
+	#endif
+
 	cur_p = mark_point(cur_x, cur_y, inter);
 	#ifdef DEBUG
 	printf("start point: ");
@@ -27,8 +30,12 @@ int start_finding(int start_x, int start_y)
 
 	while(token < TOKEN_COUNT)
 	{
+		#ifdef DEBUG
 		inter = Robot_GetIntersections();
 		print_intersection(inter);
+		#else
+		inter =  get_intersection();
+		#endif
 
 		push(cur_p);
 		//print_stack();
@@ -58,9 +65,16 @@ int start_finding(int start_x, int start_y)
 					cur_y += 1;
 					break;
 			}
+			#ifdef DEBUG
 			inter = Robot_GetIntersections();
+			#else
+			inter =  get_intersection();
+			#endif
+
 			cur_p = mark_point(cur_x, cur_y, inter);
+			#ifdef DEBUG
 			print_point(cur_p);
+			#endif
 
 			if(ret == ROBOT_SUCCESS)
 			{
