@@ -1,9 +1,7 @@
 #ifdef DEBUG
 #include "../h/RobotProxy.h"
-#include "../h/RobolabSimClient.h"
-#else
-#include "RobolabSimClient.h"
 #endif
+#include "../h/RobolabSimClient.h"
 
 //implemetation of functions
 int start_finding(int start_x, int start_y)
@@ -699,10 +697,10 @@ int print_queue()
 int print_path()
 {
 }
-#endif
 
 int main(void) {
 	start_finding(START_X, START_Y);
 
 	return 0;
 }
+#endif
