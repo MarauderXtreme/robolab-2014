@@ -1,7 +1,9 @@
 #ifdef DEBUG
 #include "../h/RobotProxy.h"
-#endif
 #include "../h/RobolabSimClient.h"
+#else
+#include "RobolabSimClient.h"
+#endif
 
 //implemetation of functions
 int start_finding(int start_x, int start_y)
