@@ -7,11 +7,10 @@
 #define MAX_WIDTH 7
 #define TOKEN_COUNT 3
 #define DIST_INFINITY 128
-#define UNKOWN 1024
 #define STACK_INVALID -1
 #define QUEUE_INVALID -1
-#define START_X 0
-#define START_Y 0
+#define START_X 7
+#define START_Y 6
 
 #define MARK_EAST(POINT) ((POINT).inter |= EAST)
 #define MARK_SOUTH(POINT) ((POINT).inter |= SOUTH)
@@ -71,7 +70,7 @@ struct POINT *prev[MAX_LENGTH][MAX_WIDTH];
 
 //definition of functions
 int start_finding(int, int);
-int move(struct POINT *cur_p, int);
+int aud_move(struct POINT *cur_p, int);
 struct POINT *mark_point(int, int, int);
 int get_direction(struct POINT *);
 int push(struct POINT*);
@@ -90,12 +89,15 @@ int stack_pointer = STACK_INVALID;
 int queue_start = QUEUE_INVALID;
 int queue_end = QUEUE_INVALID;
 
+#ifdef DEBUG
 //for debugging
+#define ROBOT_MOVE(x, y) (Robot_Move(START_Y - (y), x - START_X))
 int print_direction(struct POINT *cur_p, int);
 int print_intersection(int);
 int print_point(struct POINT*);
 int print_stack();
 int print_queue();
 int print_path();
+#endif
 
 #endif

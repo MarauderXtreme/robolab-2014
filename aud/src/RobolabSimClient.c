@@ -17,9 +17,11 @@ int start_finding(int start_x, int start_y)
 
 	inter = Robot_GetIntersections();
 	cur_p = mark_point(cur_x, cur_y, inter);
+	#ifdef DEBUG
 	printf("start point: ");
 	print_point(cur_p);
 	printf("\n");
+	#endif
 
 	while(token < TOKEN_COUNT)
 	{
@@ -33,21 +35,25 @@ int start_finding(int start_x, int start_y)
 		{
 			print_direction(cur_p, dir);
 
-			ret = move(cur_p, dir);
+			#ifdef DEBUG
+			ret = aud_move(cur_p, dir);
+			#else
+			ret = move(cur_p->x, cur->y, dir);	//ROBOT_INTERFACE
+			#endif
 			//update current point
 			switch(dir)
 			{
 				case EAST:
-					cur_y += 1;
-					break;
-				case SOUTH:
 					cur_x += 1;
 					break;
-				case WEST:
+				case SOUTH:
 					cur_y -= 1;
 					break;
-				case NORTH:
+				case WEST:
 					cur_x -= 1;
+					break;
+				case NORTH:
+					cur_y += 1;
 					break;
 			}
 			inter = Robot_GetIntersections();
@@ -64,17 +70,23 @@ int start_finding(int start_x, int start_y)
 				{
 					tmp_p->has_token = 1;
 					token++;
+					#ifdef DEBUG
 					printf("[%d. token]\n", token);
+					#endif
 				}
 				else
 				{
+					#ifdef DEBUG
 					printf("[not a new token]\n");
+					#endif
 				}
 
 				if(token == TOKEN_COUNT)
 				{
 					//all token were found, go back to start point
+					#ifdef DEBUG
 					printf("going back to start point......\n");
+					#endif
 					push(cur_p);
 					ppath = find_shortest_path(cur_p->x, cur_p->y, START_X, START_Y);
 					if(ppath)
@@ -85,9 +97,22 @@ int start_finding(int start_x, int start_y)
 						while(ppath >= 0)
 						{
 							tmp_p = shortest_path[ppath];
+							#ifdef DEBUG
 							print_point(tmp_p);
 							printf("\n");
-							Robot_Move(tmp_p->x, tmp_p->y);
+							ROBOT_MOVE(tmp_p->x, tmp_p->y);
+							#else
+							if((cur_p->x - tmp_p->x) == -1) //go east
+								dir = EAST;
+							else if((cur_p->y - tmp_p->y) == 1) //go south
+								dir = SOUTH;
+							else if((cur_p->x - tmp_p->x) == 1) //go west
+								dir = WEST;
+							else if((cur_p->y - tmp_p->y) == -1) //go north
+								dir = NORTH;
+							move(tmp_p->x, tmp_y->y, dir);
+							#endif
+							cur_p = tmp_p;
 							ppath--;
 						}
 
@@ -97,14 +122,18 @@ int start_finding(int start_x, int start_y)
 						cur_x = cur_p->x;
 						cur_y = cur_p->y;
 					}
+					#ifdef DEBUG
 					printf("task finished!\n");
+					#endif
 
 					break;
 				}
 			}
 			else
 			{
+				#ifdef DEBUG
 				printf("move failed!\n");
+				#endif
 			}
 		}
 		else
@@ -112,7 +141,9 @@ int start_finding(int start_x, int start_y)
 			//there is no ways forward, go back to nearest point
 			tmp_p = get_last_open_point();
 			npop = stack_pointer - get_stack_index(tmp_p->x, tmp_p->y);
+			#ifdef DEBUG
 			printf("going back to (%d, %d)\n", tmp_p->x, tmp_p->y);
+			#endif
 			ppath = find_shortest_path(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
 
 			if(ppath)
@@ -123,7 +154,20 @@ int start_finding(int start_x, int start_y)
 				while(ppath >= 0)
 				{
 					tmp_p = shortest_path[ppath];
-					Robot_Move(tmp_p->x, tmp_p->y);
+					#ifdef DEBUG
+					ROBOT_MOVE(tmp_p->x, tmp_p->y);
+					#else
+					if((cur_p->x - tmp_p->x) == -1) //go east
+						dir = EAST;
+					else if((cur_p->x - tmp_p->x) == 1) //go west
+						dir = WEST;
+					else if((cur_p->y - tmp_p->y) == -1) //go north
+						dir = NORTH;
+					else if((cur_p->y - tmp_p->y) == 1) //go south
+						dir = SOUTH;
+					move(tmp_p->x, tmp_p->y, dir);
+					#endif
+					cur_p = tmp_p;
 					ppath--;
 				}
 
@@ -138,17 +182,21 @@ int start_finding(int start_x, int start_y)
 				//was already at every point and back to start point
 				//task should be ended
 				//that means, not enough token can be found
+				#ifdef DEBUG
 				printf("task ended without enough token were found.\n");
+				#endif
 				break;
 			}
 		}
+		#ifdef DEBUG
 		printf("\n");
+		#endif
 	}
 
 	return 0;
 }
 
-int move(struct POINT *cur_p, int dir)
+int aud_move(struct POINT *cur_p, int dir)
 {
 	int ret;
 	struct POINT *neighbor;
@@ -162,7 +210,11 @@ int move(struct POINT *cur_p, int dir)
 				GO_EAST(*cur_p);
 				GO_WEST(*neighbor);
 			}
-			ret = Robot_Move(cur_p->x, cur_p->y + 1);
+			#ifdef DEBUG
+			ret = ROBOT_MOVE(cur_p->x + 1, cur_p->y);
+			#else
+			move(cur_p->x + 1, cur_p->y, dir);
+			#endif
 			break;
 		case SOUTH:
 			neighbor = get_neighbor(cur_p, dir);
@@ -171,7 +223,11 @@ int move(struct POINT *cur_p, int dir)
 				GO_SOUTH(*cur_p);
 				GO_NORTH(*neighbor);
 			}
-			ret = Robot_Move(cur_p->x + 1, cur_p->y);
+			#ifdef DEBUG
+			ret = ROBOT_MOVE(cur_p->x, cur_p->y - 1);
+			#else
+			move(cur_p->x, cur_p->y - 1, dir);
+			#endif
 			break;
 		case WEST:
 			neighbor = get_neighbor(cur_p, dir);
@@ -180,7 +236,11 @@ int move(struct POINT *cur_p, int dir)
 				GO_WEST(*cur_p);
 				GO_EAST(*neighbor);
 			}
-			ret = Robot_Move(cur_p->x, cur_p->y - 1);
+			#ifdef DEBUG
+			ret = ROBOT_MOVE(cur_p->x - 1, cur_p->y);
+			#else
+			move(cur_p->x - 1, cur_p->y, dir);
+			#endif
 			break;
 		case NORTH:
 			neighbor = get_neighbor(cur_p, dir);
@@ -189,7 +249,11 @@ int move(struct POINT *cur_p, int dir)
 				GO_NORTH(*cur_p);
 				GO_SOUTH(*neighbor);
 			}
-			ret = Robot_Move(cur_p->x - 1, cur_p->y);
+			#ifdef DEBUG
+			ret = ROBOT_MOVE(cur_p->x, cur_p->y + 1);
+			#else
+			move(cur_p->x, cur_p->y + 1, dir);
+			#endif
 			break;
 		default:
 			ret = 0x00;
@@ -239,56 +303,56 @@ struct POINT *mark_point(int x, int y, int inter)
 	if(inter & EAST)
 	{
 		MARK_EAST(points[x][y]);
-		MARK_WEST(points[x][y + 1]);
-		points[x][y + 1].x = x;
-		points[x][y + 1].y = y + 1;
-		points[x][y + 1].exist = 1;
-		if(points[x][y + 1].detected)
+		MARK_WEST(points[x + 1][y]);
+		points[x + 1][y].x = x + 1;
+		points[x + 1][y].y = y;
+		points[x + 1][y].exist = 1;
+		if(points[x + 1][y].detected)
 		{
 			GO_EAST(points[x][y]);
-			GO_WEST(points[x][y + 1]);
+			GO_WEST(points[x + 1][y]);
 		}
 	}
 
 	if(inter & SOUTH)
 	{
 		MARK_SOUTH(points[x][y]);
-		MARK_NORTH(points[x + 1][y]);
-		points[x + 1][y].x = x + 1;
-		points[x + 1][y].y = y;
-		points[x + 1][y].exist = 1;
-		if(points[x + 1][y].detected)
+		MARK_NORTH(points[x][y - 1]);
+		points[x][y - 1].x = x;
+		points[x][y - 1].y = y - 1;
+		points[x][y - 1].exist = 1;
+		if(points[x][y - 1].detected)
 		{
 			GO_SOUTH(points[x][y]);
-			GO_NORTH(points[x + 1][y]);
+			GO_NORTH(points[x][y - 1]);
 		}
 	}
 
 	if(inter & WEST)
 	{
 		MARK_WEST(points[x][y]);
-		MARK_EAST(points[x][y - 1]);
-		points[x][y - 1].x = x;
-		points[x][y - 1].y = y - 1;
-		points[x][y - 1].exist = 1;
-		if(points[x][y - 1].detected)
+		MARK_EAST(points[x - 1][y]);
+		points[x - 1][y].x = x - 1;
+		points[x - 1][y].y = y;
+		points[x - 1][y].exist = 1;
+		if(points[x - 1][y].detected)
 		{
 			GO_WEST(points[x][y]);
-			GO_EAST(points[x][y - 1]);
+			GO_EAST(points[x - 1][y]);
 		}
 	}
 
 	if(inter & NORTH)
 	{
 		MARK_NORTH(points[x][y]);
-		MARK_SOUTH(points[x - 1][y]);
-		points[x - 1][y].x = x - 1;
-		points[x - 1][y].y = y;
-		points[x - 1][y].exist = 1;
-		if(points[x - 1][y].detected)
+		MARK_SOUTH(points[x][y + 1]);
+		points[x][y + 1].x = x;
+		points[x][y + 1].y = y + 1;
+		points[x][y + 1].exist = 1;
+		if(points[x][y + 1].detected)
 		{
 			GO_NORTH(points[x][y]);
-			GO_SOUTH(points[x - 1][y]);
+			GO_SOUTH(points[x][y + 1]);
 		}
 	}
 
@@ -316,20 +380,20 @@ struct POINT *get_neighbor(struct POINT *p, int dir)
 	switch(dir)
 	{
 		case EAST:
-			if((p->y + 1) < MAX_WIDTH)
-				neighbor = &points[p->x][p->y + 1];
-			break;
-		case SOUTH:
 			if((p->x + 1) < MAX_LENGTH)
 				neighbor = &points[p->x + 1][p->y];
 			break;
-		case WEST:
+		case SOUTH:
 			if(p->y > 0)
 				neighbor = &points[p->x][p->y - 1];
 			break;
-		case NORTH:
+		case WEST:
 			if(p->x > 0)
 				neighbor = &points[p->x - 1][p->y];
+			break;
+		case NORTH:
+			if((p->y + 1) < MAX_WIDTH)
+				neighbor = &points[p->x][p->y + 1];
 			break;
 		default:
 			neighbor = NULL;
@@ -350,22 +414,22 @@ struct POINT *get_last_open_point()
 		p = &points[s->x][s->y];
 		if(HAS_EAST(*p))
 		{
-			if(points[p->x][p->y + 1].detected == 0)
+			if(points[p->x + 1][p->y].detected == 0)
 				break;
 		}
 		if(HAS_SOUTH(*p))
 		{
-			if(points[p->x + 1][p->y].detected == 0)
+			if(points[p->x][p->y - 1].detected == 0)
 				break;
 		}
 		if(HAS_WEST(*p))
 		{
-			if(points[p->x][p->y - 1].detected == 0)
+			if(points[p->x - 1][p->y].detected == 0)
 				break;
 		}
 		if(HAS_NORTH(*p))
 		{
-			if(points[p->x - 1][p->y].detected == 0)
+			if(points[p->x][p->y + 1].detected == 0)
 				break;
 		}
 		sp--;
@@ -414,18 +478,6 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 		{
 			if(HAS_EAST(*p))
 			{
-				x = p->x;
-				y = p->y + 1;
-				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
-					queue_append(&points[x][y]);
-				if(dist[x][y] > (dist[p->x][p->y] + 1))
-				{
-					dist[x][y] = dist[p->x][p->y] + 1;
-					prev[x][y] = &points[p->x][p->y];
-				}
-			}
-			if(HAS_SOUTH(*p))
-			{
 				x = p->x + 1;
 				y = p->y;
 				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
@@ -436,7 +488,7 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 					prev[x][y] = &points[p->x][p->y];
 				}
 			}
-			if(HAS_WEST(*p))
+			if(HAS_SOUTH(*p))
 			{
 				x = p->x;
 				y = p->y - 1;
@@ -448,10 +500,22 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 					prev[x][y] = &points[p->x][p->y];
 				}
 			}
-			if(HAS_NORTH(*p))
+			if(HAS_WEST(*p))
 			{
 				x = p->x - 1;
 				y = p->y;
+				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
+					queue_append(&points[x][y]);
+				if(dist[x][y] > (dist[p->x][p->y] + 1))
+				{
+					dist[x][y] = dist[p->x][p->y] + 1;
+					prev[x][y] = &points[p->x][p->y];
+				}
+			}
+			if(HAS_NORTH(*p))
+			{
+				x = p->x;
+				y = p->y + 1;
 				if(points[x][y].exist && (dist[x][y] == DIST_INFINITY))
 					queue_append(&points[x][y]);
 				if(dist[x][y] > (dist[p->x][p->y] + 1))
@@ -558,6 +622,7 @@ int queue_length()
 	return (queue_start == -1)?0:(queue_end - queue_start + 1);
 }
 
+#ifdef DEBUG
 ////////////////////////////////////////////////////////////////////
 //////		debugging functions
 ////////////////////////////////////////////////////////////////////
@@ -630,6 +695,7 @@ int print_queue()
 int print_path()
 {
 }
+#endif
 
 int main(void) {
 	start_finding(START_X, START_Y);

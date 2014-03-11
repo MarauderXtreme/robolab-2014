@@ -14,8 +14,8 @@
 #include "RobotProxy.h"
 
 // define server config here
-#define IP "141.30.61.87"
-//#define IP "localhost"
+//#define IP "141.30.61.87"
+#define IP "localhost"
 #define PORT "8080"
 
 // define your GROUP ID here (no umlauts!)
