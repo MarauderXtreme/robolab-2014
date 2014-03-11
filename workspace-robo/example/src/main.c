@@ -44,6 +44,32 @@ void ecrobot_device_terminate(void) {
 	ecrobot_set_light_sensor_inactive(S1);
 }
 
+int drive(int x, int y, int dir)
+{
+	int ret = ROBOT_FAIL;
+	while(1) {
+		while(is_black() == 1 && get_token() == 0 && got_intersection == 0)
+		{
+			start_robot();
+		}
+		if(get_token() == 1) {
+			systick_wait_ms(10000);
+			ret = ROBOT_TOKENFOUND;
+		}
+		if(is_black() == 0 && get_token() == 0  && got_intersection == 0) {
+			if(find_way_back() == 0) {
+				goto_intersection();
+				got_intersection = 1;
+			}
+		}
+		if(got_intersection == 1) {
+			ret = ROBOT_SUCCESS;
+			break;
+		}
+	}
+	return ret;
+}
+
 TASK(OSEK_Main_Task) {
 	int got_intersection = 0;
 	// Tells us where we came from
