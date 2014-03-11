@@ -65,6 +65,7 @@ TASK(OSEK_Main_Task) {
 		if(got_intersection == 1) {
 			get_intersection(direction); //int intersection_type =
 			stop_robot();
+			move(0,-1,direction);
 			got_intersection = 0;
 		}
 	}
