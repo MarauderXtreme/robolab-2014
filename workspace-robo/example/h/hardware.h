@@ -14,11 +14,8 @@
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
 
-
+#include "main.h"
 #include "RobolabSimClient.h"
-
-int actposx = 6;
-int actposy = 7;
 
 void display_message();
 void set_velocity(int vb,int vc);

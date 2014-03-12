@@ -217,7 +217,7 @@ int rotate_explore(int translated_direction[4]) {
 	int third_flag = 0;
 	int fourth_flag = 0;
 	set_count_zero();
-	while(get_degree_b(850) != 1) {
+	while(get_degree_b(900) != 1) {
 		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 100 && nxt_motor_get_count(B) <= 270) {
 			beep();
@@ -378,9 +378,9 @@ void turn_left() {
 	}
 }
 void turn_right() {
-	while(get_degree_c(400) != 1) {
+	while(get_degree_c(360) != 1) {
 		set_velocity(medpowneg,medpowpos);
-		if(is_black() == 1 && nxt_motor_get_count(C) >= 230 && nxt_motor_get_count(C) <= 400) {
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 160 && nxt_motor_get_count(C) <= 360) {
 			stop_robot();
 			return;
 		}

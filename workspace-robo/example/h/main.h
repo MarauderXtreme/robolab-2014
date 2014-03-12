@@ -13,6 +13,10 @@
 
 
 // Tells us where we came from
-int g_dir = NORTH;
+int g_dir = 0x10;
+
+//Define actual start position
+int actposx = 6;
+int actposy = 7;
 
 #endif /* MAIN_H_ */
