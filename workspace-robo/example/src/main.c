@@ -93,7 +93,7 @@ int test()
 		}
 	}
 	if(got_intersection == 1) {
-		get_intersection(direction); //int intersection_type =
+		get_intersection(direction);
 		stop_robot();
 		move(1,0,direction);
 		got_intersection = 0;
