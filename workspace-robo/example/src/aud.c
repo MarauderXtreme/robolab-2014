@@ -70,7 +70,7 @@ int start_finding(int start_x, int start_y)
 			ret = aud_move(cur_p, dir);
 			#else
 			//drive on step
-			ret = drive(cur_x, cur_y, get_reverse_dir(last_dir));
+			ret = move(cur_x, cur_y, get_reverse_dir(last_dir));
 			last_dir = dir;
 			#endif
 
