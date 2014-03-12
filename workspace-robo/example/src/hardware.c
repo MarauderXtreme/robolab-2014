@@ -132,7 +132,7 @@ int find_way_back() {
 	/**
 	 * turn right
 	 */
-	while(get_degree_c(100) != 1) {
+	while(get_degree_c(50) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 		if(is_black() == 1) {
 			stop_robot();
@@ -143,7 +143,7 @@ int find_way_back() {
 	/**
 	 * turn left
 	 */
-	while(get_degree_b(100) != 1) {
+	while(get_degree_b(50) != 1) {
 		set_velocity(lowpowpos,lowpowneg);
 		if(is_black() == 1) {
 			stop_robot();
@@ -183,21 +183,21 @@ void goto_intersection() {
  * gives back the type of the actual intersection
  */
 int get_intersection(int direction) {
-	int intersection = 0x00;
-	if(direction == 0x20) {
-		int translated_direction[4]={0x40,0x20,0x80,0x10};
+	int intersection = ROBOT_FAIL;
+	if(direction == SOUTH) {
+		int translated_direction[4]={WEST,SOUTH,EAST,NORTH};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x80) {
-		int translated_direction[4]={0x20,0x80,0x10,0x40};
+	if(direction == EAST) {
+		int translated_direction[4]={SOUTH,EAST,NORTH,WEST};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x10) {
-		int translated_direction[4]={0x80,0x10,0x40,0x20};
+	if(direction == NORTH) {
+		int translated_direction[4]={EAST,NORTH,WEST,SOUTH};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == 0x40) {
-		int translated_direction[4]={0x10,0x40,0x20,0x80};
+	if(direction == WEST) {
+		int translated_direction[4]={NORTH,WEST,SOUTH,EAST};
 		intersection = rotate_explore(translated_direction);
 	}
 	return intersection;
@@ -322,76 +322,76 @@ void turn_straight() {
 void rotate(int x, int y, int direction) {
 	set_count_zero();
 	switch (direction) {
-		case 0x10:
-			if(x == 0 && y == -1) {
-				turn_right();
-				direction = 0x80;
-			}
-			if(x == 0 && y == 1) {
-				turn_left();
-				direction = 0x40;
-			}
+		case NORTH:
 			if(x == -1 && y == 0) {
-				turn_back();
-				direction = 0x20;
+				turn_right();
+				direction = EAST;
 			}
 			if(x == 1 && y == 0) {
+				turn_left();
+				direction = WEST;
+			}
+			if(x == 0 && y == 1) {
+				turn_back();
+				direction = SOUTH;
+			}
+			if(x == 0 && y == -1) {
 				turn_straight();
-				direction = 0x10;
+				direction = NORTH;
 			}
 			break;
-		case 0x20:
-			if(x == 0 && y == 1) {
-				turn_right();
-				direction = 0x40;
-			}
-			if(x == 0 && y == -1) {
-				turn_left();
-				direction = 0x80;
-			}
+		case SOUTH:
 			if(x == 1 && y == 0) {
-				turn_back();
-				direction = 0x10;
+				turn_right();
+				direction = WEST;
 			}
 			if(x == -1 && y == 0) {
+				turn_left();
+				direction = EAST;
+			}
+			if(x == 0 && y == -1) {
+				turn_back();
+				direction = NORTH;
+			}
+			if(x == 0 && y == 1) {
 				turn_straight();
-				direction = 0x20;
+				direction = SOUTH;
 			}
 			break;
-		case 0x40:
-			if(x == 1 && y == 0) {
-				turn_right();
-				direction = 0x10;
-			}
-			if(x == -1 && y == 0) {
-				turn_left();
-				direction = 0x20;
-			}
+		case WEST:
 			if(x == 0 && y == -1) {
-				turn_back();
-				direction = 0x80;
+				turn_right();
+				direction = NORTH;
 			}
 			if(x == 0 && y == 1) {
+				turn_left();
+				direction = SOUTH;
+			}
+			if(x == -1 && y == 0) {
+				turn_back();
+				direction = EAST;
+			}
+			if(x == 1 && y == 0) {
 				turn_straight();
-				direction = 0x40;
+				direction = WEST;
 			}
 			break;
-		case 0x80:
-			if(x == -1 && y == 0) {
-				turn_right();
-				direction = 0x20;
-			}
-			if(x == 1 && y == 0) {
-				turn_left();
-				direction = 0x10;
-			}
+		case EAST:
 			if(x == 0 && y == 1) {
-				turn_back();
-				direction = 0x40;
+				turn_right();
+				direction = SOUTH;
 			}
 			if(x == 0 && y == -1) {
+				turn_left();
+				direction = NORTH;
+			}
+			if(x == 1 && y == 0) {
+				turn_back();
+				direction = WEST;
+			}
+			if(x == -1 && y == 0) {
 				turn_straight();
-				direction = 0x80;
+				direction = EAST;
 			}
 			break;
 		default:
