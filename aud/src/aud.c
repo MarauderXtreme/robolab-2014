@@ -37,12 +37,20 @@ int start_finding(int start_x, int start_y)
 		#ifdef DEBUG
 		inter = Robot_GetIntersections();
 		print_intersection(inter);
-		#else
 		#endif
 
 		cur_p = mark_point(cur_x, cur_y, inter);
 		push(cur_p);
 		//print_stack();
+
+		#ifndef DEBUG
+		display_clear(0);
+		display_goto_xy(0,0);
+		display_int(get_reverse_dir(dir), 4);
+		display_goto_xy(0,3);
+		display_int(get_reverse_dir(inter), 4);
+		display_update();
+		#endif
 
 		if(dir = get_direction(cur_p))
 		{
@@ -84,7 +92,7 @@ int start_finding(int start_x, int start_y)
 
 			if(ret == ROBOT_SUCCESS)
 			{
-				beep();
+				beep2();
 			}
 			else if(ret == ROBOT_TOKENFOUND)
 			{
