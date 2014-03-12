@@ -255,6 +255,7 @@ int move(int posx, int posy, int direction) {
 			get_intersection(direction);
 			stop_robot();
 			drive(posx, posy, direction);
+			got_intersection = 0;
 		}
 		while(is_black() == 1 && get_token() == 0 && got_intersection == 0)
 		{
