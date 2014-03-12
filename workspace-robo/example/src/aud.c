@@ -1,4 +1,4 @@
-// #include "../h/RobotProxy.h"	//always delete this line for robot!
+//#include "../h/RobotProxy.h"	//always delete this line for robot!
 #ifndef DEBUG
 #include "../h/hardware.h"
 #endif
@@ -7,29 +7,29 @@
 //implemetation of functions
 int start_finding(int start_x, int start_y)
 {
-	int inter;
+	int inter = 0;
 	int token = 0;
 	int cur_x = start_x, cur_y = start_y;
 	int dir = SOUTH;
-	int ppath;
-	int npop;	//how many points should be poped
-	struct POINT *cur_p;
-	struct POINT *tmp_p;
-	int ret;
+	int ppath = -1;
+	int npop = 0;	//how many points should be poped
+	struct POINT *cur_p = NULL;
+	struct POINT *tmp_p = NULL;
+	int ret = 0;
 
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
 	#else
-	//inter = get_intersection(cur_dir);
+	inter = get_intersection(get_reverse_dir(dir));
 	#endif
 
-	#ifdef DEBUG
 	cur_p = mark_point(cur_x, cur_y, inter);
+	dir = get_direction(cur_p);
+
+	#ifdef DEBUG
 	printf("start point: ");
 	print_point(cur_p);
 	printf("\n");
-	#else
-	inter = get_intersection(get_reverse_dir(dir));
 	#endif
 
 	while(token < TOKEN_COUNT)
@@ -45,9 +45,9 @@ int start_finding(int start_x, int start_y)
 		//print_stack();
 		display_clear(0);
 		display_goto_xy(0,0);
-		display_int(dir,4);
+		display_int(dir, 4);
 		display_goto_xy(0,3);
-		display_int(inter,4);
+		display_int(inter, 4);
 		display_update();
 		if(dir = get_direction(cur_p))
 		{
@@ -212,8 +212,8 @@ int start_finding(int start_x, int start_y)
 
 int aud_move(struct POINT *cur_p, int dir)
 {
-	int ret;
-	struct POINT *neighbor;
+	int ret = 0;
+	struct POINT *neighbor = NULL;
 
 	switch(dir)
 	{
@@ -389,7 +389,7 @@ int get_direction(struct POINT *p)
 
 struct POINT *get_neighbor(struct POINT *p, int dir)
 {
-	struct POINT *neighbor;
+	struct POINT *neighbor = NULL;
 
 	switch(dir)
 	{
@@ -420,7 +420,7 @@ struct POINT *get_last_open_point()
 {
 	int sp = stack_pointer;
 	struct POINT *p = NULL;
-	struct STACK *s;
+	struct STACK *s = NULL;
 
 	while(sp >= 0)
 	{
@@ -456,13 +456,13 @@ struct POINT *get_last_open_point()
 //return the count of points in shortest path stack
 int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 {
-	int x, y;
-	int start_index, end_index;
-	int sp;	//pointer of global stack
-	int ppath;	//pointer of shortest path stack
-	struct POINT *p;
-	struct POINT *target_p;
-	struct STACK *s;
+	int x = INVALID, y = INVALID;
+	int start_index = STACK_INVALID, end_index = STACK_INVALID;
+	int sp = STACK_INVALID;	//pointer of global stack
+	int ppath = STACK_INVALID;	//pointer of shortest path stack
+	struct POINT *p = NULL;
+	struct POINT *target_p = NULL;
+	struct STACK *s = NULL;
 
 	//init distances to every point
 	for(x = 0;x < MAX_LENGTH;x++)
@@ -569,7 +569,7 @@ int find_shortest_path(int start_x, int start_y, int end_x, int end_y)
 
 int get_stack_index(int x, int y)
 {
-	int sp;
+	int sp = INVALID;
 
 	for(sp = stack_pointer;sp >= 0;sp--)
 	{
@@ -583,7 +583,7 @@ int get_stack_index(int x, int y)
 struct POINT *extract_min(int start, int end)
 {
 	int min = DIST_INFINITY;
-	int i;
+	int i = INVALID;
 	struct POINT *p = NULL;
 
 	for(i = start;i >= end;i--)

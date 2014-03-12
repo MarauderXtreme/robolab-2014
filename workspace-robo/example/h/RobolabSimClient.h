@@ -7,21 +7,21 @@
 #define WEST 0x40
 #define EAST 0x80
 
-#define D_N     0x10    // North
-#define D_S     0x20    // South
-#define D_NS    0x30    // North and South
-#define D_W     0x40    // West
-#define D_NW    0x50    // North and West
-#define D_SW    0x60    // South and West
-#define D_NSW   0x70    // North, South and West
-#define D_E     0x80    // East
-#define D_NE    0x90    // North and East
-#define D_SE    0xA0    // South and East
-#define D_NSE   0xB0    // North, South and East
-#define D_WE    0xC0    // West and East
-#define D_NWE   0xD0    // North, West and East
-#define D_SWE   0xE0    // South, West and East
-#define D_NSWE  0xF0    // North, South, West and East
+#define D_N     0x10    // North(16)
+#define D_S     0x20    // South(32)
+#define D_NS    0x30    // North and South(48)
+#define D_W     0x40    // West(64)
+#define D_NW    0x50    // North and West(80)
+#define D_SW    0x60    // South and West(96)
+#define D_NSW   0x70    // North, South and West(112)
+#define D_E     0x80    // East(128)
+#define D_NE    0x90    // North and East(144)
+#define D_SE    0xA0    // South and East(160)
+#define D_NSE   0xB0    // North, South and East(176)
+#define D_WE    0xC0    // West and East(192)
+#define D_NWE   0xD0    // North, West and East(208)
+#define D_SWE   0xE0    // South, West and East(224)
+#define D_NSWE  0xF0    // North, South, West and East(240)
 #define ROBOT_FAIL        0x00
 #define ROBOT_SUCCESS     0x01
 #define ROBOT_TOKENFOUND  0x02
@@ -38,6 +38,7 @@
 #define START_X 6
 #define START_Y 6
 #define NULL 0x00
+#define INVALID -1
 
 #define MARK_EAST(POINT) ((POINT).inter |= EAST)
 #define MARK_SOUTH(POINT) ((POINT).inter |= SOUTH)
