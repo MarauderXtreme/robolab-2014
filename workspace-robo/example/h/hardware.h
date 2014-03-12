@@ -14,8 +14,8 @@
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
 
-int actposx = 0;
-int actposy = 0;
+int actposx = START_X;
+int actposy = START_Y;
 
 void display_message();
 void set_velocity(int vb,int vc);

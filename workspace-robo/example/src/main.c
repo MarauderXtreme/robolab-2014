@@ -1,6 +1,6 @@
 #include "../h/main.h"
-#include "../h/hardware.h"
 #include "../h/RobolabSimClient.h"
+#include "../h/hardware.h"
 
 /**
  * Define S Ports
@@ -69,7 +69,11 @@ TASK(OSEK_Main_Task) {
 		}
 	}
 	*/
-	test();
+	move(7, 5, NORTH);
+	move(8, 5, WEST);
+	move(8, 4, NORTH);
+	move(7, 4, EAST);
+
 	//start_finding(START_X, START_Y);
 
 	/**
