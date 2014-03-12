@@ -92,7 +92,9 @@ int start_finding(int start_x, int start_y)
 
 			if(ret == ROBOT_SUCCESS)
 			{
+				#ifndef DEBUG
 				beep2();
+				#endif
 			}
 			else if(ret == ROBOT_TOKENFOUND)
 			{
