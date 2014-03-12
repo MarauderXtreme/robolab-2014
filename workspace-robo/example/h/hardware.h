@@ -37,11 +37,11 @@ int get_intersection(int direction);
 int rotate_explore(int translated_direction[4]);
 int move(int posx, int posy, int direction);
 void drive(int posx, int posy, int direction);
+int rotate(int x, int y, int direction);
 void turn_left();
 void turn_right();
 void turn_back();
 void turn_straight();
-void rotate(int x, int y, int direction);
 
 
 #endif /* HARDWARE_H_ */

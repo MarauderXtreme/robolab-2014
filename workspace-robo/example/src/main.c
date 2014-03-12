@@ -46,7 +46,6 @@ void ecrobot_device_terminate(void) {
 }
 
 TASK(OSEK_Main_Task) {
-	int got_intersection = 0;
 	/*
 	while(1) {
 		while(is_black() == 1 && get_token() == 0 && got_intersection == 0) {
@@ -69,10 +68,10 @@ TASK(OSEK_Main_Task) {
 		}
 	}
 	*/
-	move(7, 5, NORTH);
-	move(8, 5, WEST);
-	move(8, 4, NORTH);
-	move(7, 4, EAST);
+	move(7, 5, dir);
+	move(8, 5, dir);
+	move(8, 4, dir);
+	move(7, 4, dir);
 
 	//start_finding(START_X, START_Y);
 
