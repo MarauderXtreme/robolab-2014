@@ -9,6 +9,10 @@
 
 /* add user headers here: */
 
-void hello_world();
+#include "RobolabSimClient.h"
+
+
+// Tells us where we came from
+int dir = NORTH;
 
 #endif /* MAIN_H_ */

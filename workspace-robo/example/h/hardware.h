@@ -33,6 +33,7 @@ void goto_intersection();
 int get_intersection(int direction);
 int rotate_explore(int translated_direction[4]);
 void move(int posx, int posy, int direction);
+void drive(int posx, int posy, int direction) ;
 void turn_left();
 void turn_right();
 void turn_back();
