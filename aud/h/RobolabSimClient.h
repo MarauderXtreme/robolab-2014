@@ -2,10 +2,10 @@
 #define __ROBOLIBSIM_H__
 
 //robot proxy
-#define NORTH 0x10
-#define SOUTH 0x20
-#define WEST 0x40
-#define EAST 0x80
+#define NORTH 0x10		// 16
+#define SOUTH 0x20		// 32
+#define WEST 0x40		// 64
+#define EAST 0x80		// 128
 
 #define D_N     0x10    // North(16)
 #define D_S     0x20    // South(32)
