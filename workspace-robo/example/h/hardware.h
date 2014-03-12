@@ -14,6 +14,9 @@
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
 
+
+#include "RobolabSimClient.h"
+
 int actposx = START_X;
 int actposy = START_Y;
 
@@ -32,14 +35,13 @@ int set_position_back(int degree);
 void goto_intersection();
 int get_intersection(int direction);
 int rotate_explore(int translated_direction[4]);
-void move(int posx, int posy, int direction);
-void drive(int posx, int posy, int direction) ;
+int move(int posx, int posy, int direction);
+void drive(int posx, int posy, int direction);
 void turn_left();
 void turn_right();
 void turn_back();
 void turn_straight();
 void rotate(int x, int y, int direction);
-int drive(int, int, int);
 
 
 #endif /* HARDWARE_H_ */
