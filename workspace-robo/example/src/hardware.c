@@ -76,8 +76,12 @@ void stop_robot() {
  * BEEEEEP
  */
 void beep() {
-	ecrobot_sound_tone(300,500,40);
+	ecrobot_sound_tone(300,500,50);
 }
+void beep2() {
+	ecrobot_sound_tone(600,500,50);
+}
+
 /**
  * 1/TRUE if black
  * 0/FALSE if not black
@@ -126,9 +130,6 @@ void set_count_zero() {
  * Detect if robot only moved right or left from line
  */
 int find_way_back() {
-	/**
-	 * @TODO Find out if Servo C is stronger than B and switch the initial side
-	 */
 	set_count_zero();
 	/**
 	 * turn right
@@ -211,26 +212,31 @@ int get_intersection(int direction) {
  */
 int rotate_explore(int translated_direction[4]) {
 	int intersection = 0;
-	set_count_zero();
 	int first_flag = 0;
 	int second_flag = 0;
 	int third_flag = 0;
 	int fourth_flag = 0;
-	while(get_degree_b(900) != 1) {
+	set_count_zero();
+	while(get_degree_b(850) != 1) {
 		set_velocity(medpowpos,medpowneg);
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 200 && nxt_motor_get_count(B) <= 270) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 100 && nxt_motor_get_count(B) <= 270) {
+			beep();
 			first_flag = 1;
 		}
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 370 && nxt_motor_get_count(B) <= 440) {
+			beep();
 			second_flag = 1;
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 570 && nxt_motor_get_count(B) <= 640) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 520 && nxt_motor_get_count(B) <= 660) {
+			beep();
 			third_flag = 1;
 		}
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 770 && nxt_motor_get_count(B) <= 840) {
+			beep();
 			fourth_flag = 1;
 		}
 	}
+	stop_robot();
 	if(first_flag == 1) {
 		intersection = intersection + translated_direction[0];
 	}
@@ -248,23 +254,19 @@ int rotate_explore(int translated_direction[4]) {
 
 int move(int posx, int posy, int direction) {
 	int ret = ROBOT_FAIL;
-	int got_intersection = 1;
+	drive(posx, posy, direction);
 	while(1) {
-		if(got_intersection == 1) {
-			ret = ROBOT_SUCCESS;
-			get_intersection(direction);
-			stop_robot();
-			drive(posx, posy, direction);
-			got_intersection = 0;
-		}
-		while(is_black() == 1 && get_token() == 0 && got_intersection == 0)
+		while(is_black() == 1 && get_token() == 0)
 		{
 			start_robot();
 		}
-		if(is_black() == 0 && get_token() == 0  && got_intersection == 0) {
+		if(is_black() == 0 && get_token() == 0) {
 			if(find_way_back() == 0) {
 				goto_intersection();
-				return ret;
+				if (ret != ROBOT_TOKENFOUND) {
+					ret = ROBOT_SUCCESS;
+				}
+				break;
 			}
 		}
 		if(get_token() == 1) {
@@ -272,6 +274,7 @@ int move(int posx, int posy, int direction) {
 			ret = ROBOT_TOKENFOUND;
 		}
 	}
+	beep2();
 	return ret;
 }
 
@@ -280,7 +283,7 @@ void drive(int posx, int posy, int direction) {
 	int y = posy - actposy;
 	actposx = posx;
 	actposy = posy;
-	dir = rotate(x,y,direction);
+	g_dir = rotate(x,y,direction);
 }
 
 int rotate(int x, int y, int direction) {
@@ -359,7 +362,7 @@ int rotate(int x, int y, int direction) {
 			}
 			break;
 		default:
-			beep();
+			beep2();
 			break;
 	}
 	return direction;

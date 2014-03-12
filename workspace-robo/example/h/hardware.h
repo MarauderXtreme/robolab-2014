@@ -17,8 +17,8 @@
 
 #include "RobolabSimClient.h"
 
-int actposx = START_X;
-int actposy = START_Y;
+int actposx = 6;
+int actposy = 7;
 
 void display_message();
 void set_velocity(int vb,int vc);

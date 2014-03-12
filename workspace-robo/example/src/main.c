@@ -46,34 +46,8 @@ void ecrobot_device_terminate(void) {
 }
 
 TASK(OSEK_Main_Task) {
-	/*
-	while(1) {
-		while(is_black() == 1 && get_token() == 0 && got_intersection == 0) {
-			start_robot();
-		}
-		if(get_token() == 1) {
-			systick_wait_ms(10000);
-		}
-		if(is_black() == 0 && get_token() == 0  && got_intersection == 0) {
-			if(find_way_back() == 0) {
-				goto_intersection();
-				got_intersection = 1;
-			}
-		}
-		if(got_intersection == 1) {
-			get_intersection(direction); //int intersection_type =
-			stop_robot();
-			move(0,-1,direction);
-			got_intersection = 0;
-		}
-	}
-	*/
-	move(7, 5, dir);
-	move(8, 5, dir);
-	move(8, 4, dir);
-	move(7, 4, dir);
-
-	//start_finding(START_X, START_Y);
+	move(START_X, START_Y, g_dir);
+	start_finding(actposx, actposy);
 
 	/**
 	 * DO NOT DELETE THIS METHOD

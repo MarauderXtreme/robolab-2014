@@ -1,3 +1,4 @@
+// #include "../h/RobotProxy.h"	//always delete this line for robot!
 #ifndef DEBUG
 #include "../h/hardware.h"
 #endif
@@ -9,16 +10,12 @@ int start_finding(int start_x, int start_y)
 	int inter;
 	int token = 0;
 	int cur_x = start_x, cur_y = start_y;
-	int dir;
+	int dir = SOUTH;
 	int ppath;
 	int npop;	//how many points should be poped
 	struct POINT *cur_p;
 	struct POINT *tmp_p;
 	int ret;
-	int steps = 0;
-	#ifndef DEBUG
-	int last_dir = SOUTH;
-	#endif
 
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
@@ -26,11 +23,13 @@ int start_finding(int start_x, int start_y)
 	//inter = get_intersection(cur_dir);
 	#endif
 
-	//cur_p = mark_point(cur_x, cur_y, inter);
 	#ifdef DEBUG
+	cur_p = mark_point(cur_x, cur_y, inter);
 	printf("start point: ");
 	print_point(cur_p);
 	printf("\n");
+	#else
+	inter = get_intersection(get_reverse_dir(dir));
 	#endif
 
 	while(token < TOKEN_COUNT)
@@ -39,13 +38,17 @@ int start_finding(int start_x, int start_y)
 		inter = Robot_GetIntersections();
 		print_intersection(inter);
 		#else
-		inter = get_intersection(get_reverse_dir(last_dir));
 		#endif
 
 		cur_p = mark_point(cur_x, cur_y, inter);
 		push(cur_p);
 		//print_stack();
-
+		display_clear(0);
+		display_goto_xy(0,0);
+		display_int(dir,4);
+		display_goto_xy(0,3);
+		display_int(inter,4);
+		display_update();
 		if(dir = get_direction(cur_p))
 		{
 			//update current point
@@ -69,15 +72,14 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
-			//drive on step
-			ret = move(cur_x, cur_y, get_reverse_dir(last_dir));
-			last_dir = dir;
+			//move one step
+			ret = move(cur_x, cur_y, get_reverse_dir(dir));
 			#endif
 
 			#ifdef DEBUG
 			inter = Robot_GetIntersections();
 			#else
-			inter = get_intersection(get_reverse_dir(last_dir));
+			inter = get_intersection(get_reverse_dir(dir));
 			#endif
 
 			cur_p = mark_point(cur_x, cur_y, inter);
@@ -123,12 +125,13 @@ int start_finding(int start_x, int start_y)
 						while(ppath >= 0)
 						{
 							tmp_p = shortest_path[ppath];
+							dir = calc_direction(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
 							#ifdef DEBUG
 							print_point(tmp_p);
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
-							drive(tmp_p->x, tmp_p->y, get_reverse_dir(last_dir));
+							move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 							#endif
 							cur_p = tmp_p;
 							ppath--;
@@ -172,10 +175,11 @@ int start_finding(int start_x, int start_y)
 				while(ppath >= 0)
 				{
 					tmp_p = shortest_path[ppath];
+					dir = calc_direction(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
-					drive(tmp_p->x, tmp_p->y, get_reverse_dir(last_dir));
+					move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 					#endif
 					cur_p = tmp_p;
 					ppath--;
@@ -642,6 +646,20 @@ int get_reverse_dir(int dir)
 		return NORTH;
 	else if(dir == NORTH)
 		return SOUTH;
+
+	return 0;
+}
+
+int calc_direction(int start_x, int end_x, int start_y, int end_y)
+{
+	if((start_x - end_x) == -1)
+		return EAST;
+	else if((start_y - end_y) == 1)
+		return SOUTH;
+	else if((start_x - end_x) == 1)
+		return WEST;
+	else if((start_y - end_y) == -1)
+		return NORTH;
 
 	return 0;
 }

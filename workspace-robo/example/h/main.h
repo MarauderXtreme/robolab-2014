@@ -13,6 +13,6 @@
 
 
 // Tells us where we came from
-int dir = NORTH;
+int g_dir = NORTH;
 
 #endif /* MAIN_H_ */
