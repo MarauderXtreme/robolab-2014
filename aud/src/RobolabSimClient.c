@@ -16,13 +16,12 @@ int start_finding(int start_x, int start_y)
 	struct POINT *cur_p;
 	struct POINT *tmp_p;
 	int ret;
-	int steps = 0;
 	#ifdef DEBUG
 	int last_dir = SOUTH;
 	#endif
 
 	#ifdef DEBUG
-	inter = Robot_GetIntersections();
+	//inter = Robot_GetIntersections();
 	#else
 	//inter = get_intersection(cur_dir);
 	#endif
@@ -70,7 +69,7 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
-			//drive on step
+			//drive one step
 			ret = drive(cur_x, cur_y, get_reverse_dir(last_dir));
 			last_dir = dir;
 			#endif
