@@ -48,7 +48,7 @@ int start_finding(int start_x, int start_y)
 		display_goto_xy(0,0);
 		display_int(get_reverse_dir(dir), 4);
 		display_goto_xy(0,3);
-		display_int(get_reverse_dir(inter), 4);
+		display_int(inter, 4);
 		display_update();
 		#endif
 
