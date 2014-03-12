@@ -28,6 +28,8 @@ int start_finding(int start_x, int start_y)
 	printf("start point: ");
 	print_point(cur_p);
 	printf("\n");
+	#else
+	inter = get_intersection(get_reverse_dir(dir));
 	#endif
 
 	while(token < TOKEN_COUNT)
@@ -36,7 +38,6 @@ int start_finding(int start_x, int start_y)
 		inter = Robot_GetIntersections();
 		print_intersection(inter);
 		#else
-		inter = get_intersection(get_reverse_dir(dir));
 		#endif
 
 		cur_p = mark_point(cur_x, cur_y, inter);
@@ -66,7 +67,7 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
-			//drive one step
+			//move one step
 			ret = move(cur_x, cur_y, get_reverse_dir(dir));
 			#endif
 
@@ -83,6 +84,7 @@ int start_finding(int start_x, int start_y)
 
 			if(ret == ROBOT_SUCCESS)
 			{
+				beep();
 			}
 			else if(ret == ROBOT_TOKENFOUND)
 			{
