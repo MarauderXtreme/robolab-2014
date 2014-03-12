@@ -10,7 +10,7 @@ int start_finding(int start_x, int start_y)
 	int inter;
 	int token = 0;
 	int cur_x = start_x, cur_y = start_y;
-	int dir;
+	int dir = SOUTH;
 	int ppath;
 	int npop;	//how many points should be poped
 	struct POINT *cur_p;
@@ -18,13 +18,13 @@ int start_finding(int start_x, int start_y)
 	int ret;
 
 	#ifdef DEBUG
-	//inter = Robot_GetIntersections();
+	inter = Robot_GetIntersections();
 	#else
 	//inter = get_intersection(cur_dir);
 	#endif
 
-	//cur_p = mark_point(cur_x, cur_y, inter);
 	#ifdef DEBUG
+	cur_p = mark_point(cur_x, cur_y, inter);
 	printf("start point: ");
 	print_point(cur_p);
 	printf("\n");
