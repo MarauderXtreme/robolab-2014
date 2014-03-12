@@ -110,6 +110,7 @@ int get_stack_index(int, int);
 int queue_append(struct POINT *);
 struct POINT *queue_fetch();
 int queue_length();
+int get_reverse_dir(int);
 
 //global variables
 int stack_pointer = STACK_INVALID;

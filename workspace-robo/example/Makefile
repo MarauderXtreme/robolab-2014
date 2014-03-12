@@ -17,6 +17,3 @@ else
 	INC=/cygdrive/C/cygwin/nxtOSEK/toppers_osek/kernel
 	include /cygdrive/C/cygwin/nxtOSEK/ecrobot/ecrobot.mak
 endif
-
-
-
