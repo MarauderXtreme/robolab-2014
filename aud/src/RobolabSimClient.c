@@ -16,9 +16,6 @@ int start_finding(int start_x, int start_y)
 	struct POINT *cur_p;
 	struct POINT *tmp_p;
 	int ret;
-	#ifdef DEBUG
-	int last_dir = SOUTH;
-	#endif
 
 	#ifdef DEBUG
 	//inter = Robot_GetIntersections();
@@ -70,14 +67,13 @@ int start_finding(int start_x, int start_y)
 			ret = aud_move(cur_p, dir);
 			#else
 			//drive one step
-			ret = drive(cur_x, cur_y, get_reverse_dir(last_dir));
-			last_dir = dir;
+			ret = drive(cur_x, cur_y, get_reverse_dir(dir));
 			#endif
 
 			#ifdef DEBUG
 			inter = Robot_GetIntersections();
 			#else
-			inter = get_intersection(get_reverse_dir(last_dir));
+			inter = get_intersection(get_reverse_dir(dir));
 			#endif
 
 			cur_p = mark_point(cur_x, cur_y, inter);
@@ -127,7 +123,7 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
-							drive(tmp_p->x, tmp_p->y, get_reverse_dir(last_dir));
+							drive(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 							#endif
 							cur_p = tmp_p;
 							ppath--;
