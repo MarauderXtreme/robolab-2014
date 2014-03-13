@@ -129,7 +129,6 @@ int print_stack();
 int print_queue();
 int print_path();
 #else
-int display_status(int start_x, int start_y, int end_x, int end_y, int inter, int dir);
 #endif
 
 #endif

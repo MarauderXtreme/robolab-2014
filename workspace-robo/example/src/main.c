@@ -48,8 +48,6 @@ void ecrobot_device_terminate(void) {
 TASK(OSEK_Main_Task) {
 	move(6, 6);
 	start_finding(6, 6);
-
-
 	/**
 	 * DO NOT DELETE THIS METHOD
 	 * Prevent state unclear if breaking main while(1)
