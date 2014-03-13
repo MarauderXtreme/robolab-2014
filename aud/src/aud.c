@@ -45,11 +45,22 @@ int start_finding(int start_x, int start_y)
 
 		#ifndef DEBUG
 		display_clear(0);
-		display_goto_xy(0,0);
-		display_int(get_reverse_dir(dir), 4);
-		display_goto_xy(0,3);
-		display_int(inter, 4);
+		display_goto_xy(0, 0);
+		display_int(cur_p->x, 2);
+		display_goto_xy(3, 0);
+		display_int(cur_p->y, 2);
+		display_goto_xy(7, 0);
+		display_int(tmp_p->x, 2);
+		display_goto_xy(10, 0);
+		display_int(tmp_p->y, 2);
+		display_goto_xy(0, 1);
+		display_int(g_dir, 3);
+		display_goto_xy(5, 1);
+		display_int(dir, 3);
+		display_goto_xy(0, 2);
+		display_int(cur_p->inter&0xF0, 3);
 		display_update();
+
 		#endif
 
 		if(dir = get_direction(cur_p))
@@ -136,6 +147,23 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
+							display_clear(0);
+							display_goto_xy(0, 0);
+							display_int(cur_p->x, 2);
+							display_goto_xy(3, 0);
+							display_int(cur_p->y, 2);
+							display_goto_xy(7, 0);
+							display_int(tmp_p->x, 2);
+							display_goto_xy(10, 0);
+							display_int(tmp_p->y, 2);
+							display_goto_xy(0, 1);
+							display_int(g_dir, 3);
+							display_goto_xy(5, 1);
+							display_int(dir, 3);
+							display_goto_xy(0, 2);
+							display_int(cur_p->inter&0xF0, 3);
+							display_update();
+
 							move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 							#endif
 							cur_p = tmp_p;
@@ -184,6 +212,23 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
+					display_clear(0);
+					display_goto_xy(0, 0);
+					display_int(cur_p->x, 2);
+					display_goto_xy(3, 0);
+					display_int(cur_p->y, 2);
+					display_goto_xy(7, 0);
+					display_int(tmp_p->x, 2);
+					display_goto_xy(10, 0);
+					display_int(tmp_p->y, 2);
+					display_goto_xy(0, 1);
+					display_int(g_dir, 3);
+					display_goto_xy(5, 1);
+					display_int(dir, 3);
+					display_goto_xy(0, 2);
+					display_int(cur_p->inter&0xF0, 3);
+					display_update();
+
 					move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 					#endif
 					cur_p = tmp_p;
