@@ -67,24 +67,7 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
-			display_clear(0);
-			display_goto_xy(0,0);
-			display_int(cur_p->x, 2);
-			display_goto_xy(3,0);
-			display_int(cur_p->y, 2);
-			display_goto_xy(6,0);
-			display_char('-');
-			display_goto_xy(7,0);
-			display_char('>');
-			display_goto_xy(9,0);
-			display_int(cur_x, 2);
-			display_goto_xy(11,0);
-			display_int(cur_y, 2);
-			display_goto_xy(0,1);
-			display_int(get_reverse_dir(dir), 4);
-			display_goto_xy(0,2);
-			display_int(inter, 4);
-			display_update();
+			display_status(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y, cur_p->inter&0xF0, dir);
 			//move one step
 			ret = move(cur_x, cur_y, g_dir);
 			#endif
@@ -146,6 +129,7 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
+							display_status(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y, cur_p->inter&0xF0, dir);
 							move(tmp_p->x, tmp_p->y, g_dir);
 							#endif
 							cur_p = tmp_p;
@@ -194,6 +178,7 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
+					display_status(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y, cur_p->inter&0xF0, dir);
 					move(tmp_p->x, tmp_p->y, g_dir);
 					#endif
 					cur_p = tmp_p;
@@ -755,6 +740,32 @@ int print_path()
 
 int main(void) {
 	start_finding(START_X, START_Y);
+
+	return 0;
+}
+#else
+int display_status(int start_x, int start_y, int end_x, int end_y, int inter, int dir)
+{
+	display_clear(0);
+	display_goto_xy(0,0);
+	display_int(start_x, 2);
+	display_goto_xy(3,0);
+	display_int(start_y, 2);
+	display_goto_xy(6,0);
+	display_char('-');
+	display_goto_xy(7,0);
+	display_char('>');
+	display_goto_xy(9,0);
+	display_int(end_x, 2);
+	display_goto_xy(11,0);
+	display_int(end_y, 2);
+	display_goto_xy(0,1);
+	display_int(g_dir, 4);
+	display_goto_xy(5,1);
+	display_int(dir, 4);
+	display_goto_xy(0,2);
+	display_int(inter, 4);
+	display_update();
 
 	return 0;
 }
