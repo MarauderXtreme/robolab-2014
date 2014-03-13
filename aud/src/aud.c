@@ -39,7 +39,10 @@ int start_finding(int start_x, int start_y)
 		//print_intersection(inter);
 		#endif
 
-		cur_p = mark_point(cur_x, cur_y, inter);
+		if(points[cur_x][cur_y].detected == 0)
+			cur_p = mark_point(cur_x, cur_y, inter);
+		else
+			cur_p = &points[cur_x][cur_y];
 		push(cur_p);
 		//print_stack();
 
