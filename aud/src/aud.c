@@ -43,24 +43,6 @@ int start_finding(int start_x, int start_y)
 		push(cur_p);
 		//print_stack();
 
-		#ifndef DEBUG
-		display_clear(0);
-		display_goto_xy(0, 0);
-		display_int(cur_p->x, 2);
-		display_goto_xy(3, 0);
-		display_int(cur_p->y, 2);
-		display_goto_xy(7, 0);
-		display_int(tmp_p->x, 2);
-		display_goto_xy(10, 0);
-		display_int(tmp_p->y, 2);
-		display_goto_xy(0, 1);
-		display_int(g_dir, 3);
-		display_goto_xy(5, 1);
-		display_int(dir, 3);
-		display_goto_xy(0, 2);
-		display_int(cur_p->inter&0xF0, 3);
-		display_update();
-
 		#endif
 
 		if(dir = get_direction(cur_p))
@@ -87,6 +69,24 @@ int start_finding(int start_x, int start_y)
 			ret = aud_move(cur_p, dir);
 			#else
 			//move one step
+			#ifndef DEBUG
+			display_clear(0);
+			display_goto_xy(0, 0);
+			display_int(cur_p->x, 2);
+			display_goto_xy(3, 0);
+			display_int(cur_p->y, 2);
+			display_goto_xy(7, 0);
+			display_int(cur_x, 2);
+			display_goto_xy(10, 0);
+			display_int(cur_y, 2);
+			display_goto_xy(0, 1);
+			display_int(g_dir, 3);
+			display_goto_xy(5, 1);
+			display_int(dir, 3);
+			display_goto_xy(0, 2);
+			display_int(cur_p->inter&0xF0, 3);
+			display_update();
+
 			ret = move(cur_x, cur_y, get_reverse_dir(dir));
 			#endif
 

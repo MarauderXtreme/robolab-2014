@@ -101,6 +101,7 @@ int start_finding(int start_x, int start_y)
 			display_goto_xy(0, 2);
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
+
 			//move one step
 			ret = move(cur_x, cur_y);
 			#endif
