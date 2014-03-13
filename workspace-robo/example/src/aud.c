@@ -20,7 +20,7 @@ int start_finding(int start_x, int start_y)
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
 	#else
-	inter = get_intersection();
+	inter = get_intersection(get_reverse_dir(dir));
 	#endif
 
 	cur_p = mark_point(cur_x, cur_y, inter);
@@ -43,23 +43,6 @@ int start_finding(int start_x, int start_y)
 		push(cur_p);
 		//print_stack();
 
-		#ifndef DEBUG
-		display_clear(0);
-		display_goto_xy(0, 0);
-		display_int(cur_p->x, 2);
-		display_goto_xy(3, 0);
-		display_int(cur_p->y, 2);
-		display_goto_xy(7, 0);
-		display_int(tmp_p->x, 2);
-		display_goto_xy(10, 0);
-		display_int(tmp_p->y, 2);
-		display_goto_xy(0, 1);
-		display_int(g_dir, 3);
-		display_goto_xy(5, 1);
-		display_int(dir, 3);
-		display_goto_xy(0, 2);
-		display_int(cur_p->inter&0xF0, 3);
-		display_update();
 		#endif
 
 		if(dir = get_direction(cur_p))
@@ -85,15 +68,17 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
+			//move one step
+			#ifndef DEBUG
 			display_clear(0);
 			display_goto_xy(0, 0);
 			display_int(cur_p->x, 2);
 			display_goto_xy(3, 0);
 			display_int(cur_p->y, 2);
 			display_goto_xy(7, 0);
-			display_int(tmp_p->x, 2);
+			display_int(cur_x, 2);
 			display_goto_xy(10, 0);
-			display_int(tmp_p->y, 2);
+			display_int(cur_y, 2);
 			display_goto_xy(0, 1);
 			display_int(g_dir, 3);
 			display_goto_xy(5, 1);
@@ -102,14 +87,13 @@ int start_finding(int start_x, int start_y)
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
 
-			//move one step
-			ret = move(cur_x, cur_y);
+			ret = move(cur_x, cur_y, get_reverse_dir(dir));
 			#endif
 
 			#ifdef DEBUG
 			inter = Robot_GetIntersections();
 			#else
-			inter = get_intersection();
+			inter = get_intersection(get_reverse_dir(dir));
 			#endif
 
 			cur_p = mark_point(cur_x, cur_y, inter);
@@ -163,7 +147,6 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
-
 							display_clear(0);
 							display_goto_xy(0, 0);
 							display_int(cur_p->x, 2);
@@ -181,7 +164,7 @@ int start_finding(int start_x, int start_y)
 							display_int(cur_p->inter&0xF0, 3);
 							display_update();
 
-							move(tmp_p->x, tmp_p->y);
+							move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 							#endif
 							cur_p = tmp_p;
 							ppath--;
@@ -229,7 +212,6 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
-
 					display_clear(0);
 					display_goto_xy(0, 0);
 					display_int(cur_p->x, 2);
@@ -247,7 +229,7 @@ int start_finding(int start_x, int start_y)
 					display_int(cur_p->inter&0xF0, 3);
 					display_update();
 
-					move(tmp_p->x, tmp_p->y);
+					move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
 					#endif
 					cur_p = tmp_p;
 					ppath--;
@@ -295,7 +277,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x + 1, cur_p->y);
 			#else
-			move(cur_p->x + 1, cur_p->y);
+			move(cur_p->x + 1, cur_p->y, dir);
 			#endif
 			break;
 		case SOUTH:
@@ -308,7 +290,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x, cur_p->y - 1);
 			#else
-			move(cur_p->x, cur_p->y - 1);
+			move(cur_p->x, cur_p->y - 1, dir);
 			#endif
 			break;
 		case WEST:
@@ -321,7 +303,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x - 1, cur_p->y);
 			#else
-			move(cur_p->x - 1, cur_p->y);
+			move(cur_p->x - 1, cur_p->y, dir);
 			#endif
 			break;
 		case NORTH:
@@ -334,7 +316,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x, cur_p->y + 1);
 			#else
-			move(cur_p->x, cur_p->y + 1);
+			move(cur_p->x, cur_p->y + 1, dir);
 			#endif
 			break;
 		default:
