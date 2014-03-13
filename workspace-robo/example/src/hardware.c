@@ -378,9 +378,9 @@ void turn_left() {
 	}
 }
 void turn_right() {
-	while(get_degree_c(360) != 1) {
+	while(get_degree_c(400) != 1) {
 		set_velocity(medpowneg,medpowpos);
-		if(is_black() == 1 && nxt_motor_get_count(C) >= 160 && nxt_motor_get_count(C) <= 360) {
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 160 && nxt_motor_get_count(C) <= 400) {
 			stop_robot();
 			return;
 		}
