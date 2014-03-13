@@ -184,22 +184,22 @@ void goto_intersection() {
  * translates direction for detection
  * gives back the type of the actual intersection
  */
-int get_intersection(int direction) {
+int get_intersection() {
 	int intersection = ROBOT_FAIL;
-	if(direction == SOUTH) {
-		int translated_direction[4]={WEST,SOUTH,EAST,NORTH};
-		intersection = rotate_explore(translated_direction);
-	}
-	if(direction == EAST) {
-		int translated_direction[4]={SOUTH,EAST,NORTH,WEST};
-		intersection = rotate_explore(translated_direction);
-	}
-	if(direction == NORTH) {
+	if(g_dir == SOUTH) {
 		int translated_direction[4]={EAST,NORTH,WEST,SOUTH};
 		intersection = rotate_explore(translated_direction);
 	}
-	if(direction == WEST) {
+	if(g_dir == EAST) {
 		int translated_direction[4]={NORTH,WEST,SOUTH,EAST};
+		intersection = rotate_explore(translated_direction);
+	}
+	if(g_dir == NORTH) {
+		int translated_direction[4]={WEST,SOUTH,EAST,NORTH};
+		intersection = rotate_explore(translated_direction);
+	}
+	if(g_dir == WEST) {
+		int translated_direction[4]={SOUTH,EAST,NORTH,WEST};
 		intersection = rotate_explore(translated_direction);
 	}
 	return intersection;
@@ -255,9 +255,9 @@ int rotate_explore(int translated_direction[4]) {
 /**
  * Move function for interface
  */
-int move(int posx, int posy, int direction) {
+int move(int posx, int posy) {
 	int ret = ROBOT_FAIL;
-	drive(posx, posy, direction);
+	drive(posx, posy, g_dir);
 	while(1) {
 		while(is_black() == 1 && get_token() == 0)
 		{
@@ -301,73 +301,73 @@ int rotate(int x, int y, int direction) {
 	set_count_zero();
 	switch (direction) {
 		case NORTH:
-			if(x == -1 && y == 0) {
+			if(x == 1 && y == 0) {
 				turn_right();
 				direction = EAST;
 			}
-			if(x == 1 && y == 0) {
+			if(x == -1 && y == 0) {
 				turn_left();
 				direction = WEST;
 			}
-			if(x == 0 && y == 1) {
+			if(x == 0 && y == -1) {
 				turn_back();
 				direction = SOUTH;
 			}
-			if(x == 0 && y == -1) {
+			if(x == 0 && y == 1) {
 				turn_straight();
 				direction = NORTH;
 			}
 			break;
 		case SOUTH:
-			if(x == 1 && y == 0) {
+			if(x == -1 && y == 0) {
 				turn_right();
 				direction = WEST;
 			}
-			if(x == -1 && y == 0) {
+			if(x == 1 && y == 0) {
 				turn_left();
 				direction = EAST;
 			}
-			if(x == 0 && y == -1) {
+			if(x == 0 && y == 1) {
 				turn_back();
 				direction = NORTH;
 			}
-			if(x == 0 && y == 1) {
+			if(x == 0 && y == -1) {
 				turn_straight();
 				direction = SOUTH;
 			}
 			break;
 		case WEST:
-			if(x == 0 && y == -1) {
+			if(x == 0 && y == 1) {
 				turn_right();
 				direction = NORTH;
 			}
-			if(x == 0 && y == 1) {
+			if(x == 0 && y == -1) {
 				turn_left();
 				direction = SOUTH;
 			}
-			if(x == -1 && y == 0) {
+			if(x == 1 && y == 0) {
 				turn_back();
 				direction = EAST;
 			}
-			if(x == 1 && y == 0) {
+			if(x == -1 && y == 0) {
 				turn_straight();
 				direction = WEST;
 			}
 			break;
 		case EAST:
-			if(x == 0 && y == 1) {
+			if(x == 0 && y == -1) {
 				turn_right();
 				direction = SOUTH;
 			}
-			if(x == 0 && y == -1) {
+			if(x == 0 && y == 1) {
 				turn_left();
 				direction = NORTH;
 			}
-			if(x == 1 && y == 0) {
+			if(x == -1 && y == 0) {
 				turn_back();
 				direction = WEST;
 			}
-			if(x == -1 && y == 0) {
+			if(x == 1 && y == 0) {
 				turn_straight();
 				direction = EAST;
 			}
