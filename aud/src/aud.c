@@ -196,9 +196,11 @@ int start_finding(int start_x, int start_y)
 			printf("going back to (%d, %d)\n", tmp_p->x, tmp_p->y);
 			#endif
 
-			if((tmp_p->x == 0) && (tmp_p->y == 0))
+			if((tmp_p->x == START_X) && (tmp_p->y == START_Y))
 			{
-				#ifndef DEBUG
+				#ifdef DEBUG
+				return 0;
+				#else
 				stop_robot();
 				beep();
 				display_clear(0);
