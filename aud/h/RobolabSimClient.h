@@ -30,7 +30,7 @@
 #define STACK_LENGTH 128
 #define QUEUE_LENGTH 128
 #define MAX_LENGTH 13
-#define MAX_WIDTH 7
+#define MAX_WIDTH 8
 #define TOKEN_COUNT 3
 #define DIST_INFINITY 128
 #define STACK_INVALID -1
