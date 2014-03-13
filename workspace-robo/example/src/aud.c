@@ -20,7 +20,8 @@ int start_finding(int start_x, int start_y)
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
 	#else
-	inter = get_intersection();
+	//inter = get_intersection(get_reverse_dir(dir));
+	inter = SOUTH;
 	#endif
 
 	cur_p = mark_point(cur_x, cur_y, inter);
@@ -42,25 +43,6 @@ int start_finding(int start_x, int start_y)
 		cur_p = mark_point(cur_x, cur_y, inter);
 		push(cur_p);
 		//print_stack();
-
-		#ifndef DEBUG
-		display_clear(0);
-		display_goto_xy(0, 0);
-		display_int(cur_p->x, 2);
-		display_goto_xy(3, 0);
-		display_int(cur_p->y, 2);
-		display_goto_xy(7, 0);
-		display_int(tmp_p->x, 2);
-		display_goto_xy(10, 0);
-		display_int(tmp_p->y, 2);
-		display_goto_xy(0, 1);
-		display_int(g_dir, 3);
-		display_goto_xy(5, 1);
-		display_int(dir, 3);
-		display_goto_xy(0, 2);
-		display_int(cur_p->inter&0xF0, 3);
-		display_update();
-		#endif
 
 		if(dir = get_direction(cur_p))
 		{
@@ -85,15 +67,16 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
+			//move one step
 			display_clear(0);
 			display_goto_xy(0, 0);
 			display_int(cur_p->x, 2);
 			display_goto_xy(3, 0);
 			display_int(cur_p->y, 2);
 			display_goto_xy(7, 0);
-			display_int(tmp_p->x, 2);
+			display_int(cur_x, 2);
 			display_goto_xy(10, 0);
-			display_int(tmp_p->y, 2);
+			display_int(cur_y, 2);
 			display_goto_xy(0, 1);
 			display_int(g_dir, 3);
 			display_goto_xy(5, 1);
@@ -102,14 +85,13 @@ int start_finding(int start_x, int start_y)
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
 
-			//move one step
 			ret = move(cur_x, cur_y);
 			#endif
 
 			#ifdef DEBUG
 			inter = Robot_GetIntersections();
 			#else
-			inter = get_intersection();
+			inter = get_intersection(get_reverse_dir(dir));
 			#endif
 
 			cur_p = mark_point(cur_x, cur_y, inter);
@@ -146,6 +128,10 @@ int start_finding(int start_x, int start_y)
 					//all token were found, go back to start point
 					#ifdef DEBUG
 					printf("going back to start point......\n");
+					#else
+					beep2();
+					beep2();
+					beep2();
 					#endif
 					push(cur_p);
 					ppath = find_shortest_path(cur_p->x, cur_p->y, START_X, START_Y);
@@ -194,6 +180,8 @@ int start_finding(int start_x, int start_y)
 					}
 					#ifdef DEBUG
 					printf("task finished!\n");
+					#else
+					//move(START_X, START_Y + 1);
 					#endif
 
 					break;
@@ -208,64 +196,78 @@ int start_finding(int start_x, int start_y)
 		}
 		else
 		{
-			//there is no ways forward, go back to nearest point
+			//there is no ways forward, go back to nearest open point
 			tmp_p = get_last_open_point();
 			npop = stack_pointer - get_stack_index(tmp_p->x, tmp_p->y);
 			#ifdef DEBUG
 			printf("going back to (%d, %d)\n", tmp_p->x, tmp_p->y);
 			#endif
-			ppath = find_shortest_path(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
 
-			if(ppath)
+			if((tmp_p->x == START_X) && (tmp_p->y == START_Y) && (token == 0))
 			{
-				//going back to last open point
-				ppath--;
-
-				while(ppath >= 0)
-				{
-					tmp_p = shortest_path[ppath];
-					dir = calc_direction(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
-					#ifdef DEBUG
-					ROBOT_MOVE(tmp_p->x, tmp_p->y);
-					#else
-					display_clear(0);
-					display_goto_xy(0, 0);
-					display_int(cur_p->x, 2);
-					display_goto_xy(3, 0);
-					display_int(cur_p->y, 2);
-					display_goto_xy(7, 0);
-					display_int(tmp_p->x, 2);
-					display_goto_xy(10, 0);
-					display_int(tmp_p->y, 2);
-					display_goto_xy(0, 1);
-					display_int(g_dir, 3);
-					display_goto_xy(5, 1);
-					display_int(dir, 3);
-					display_goto_xy(0, 2);
-					display_int(cur_p->inter&0xF0, 3);
-					display_update();
-
-					move(tmp_p->x, tmp_p->y);
-					#endif
-					cur_p = tmp_p;
-					ppath--;
-				}
-
-				//delete the path in stack
-				pop(npop + 1);
-				cur_p = tmp_p;
-				cur_x = cur_p->x;
-				cur_y = cur_p->y;
+				#ifdef DEBUG
+				return 0;
+				#else
+				stop_robot();
+				beep();
+				return 0;
+				#endif
 			}
 			else
 			{
-				//was already at every point and back to start point
-				//task should be ended
-				//that means, not enough token can be found
-				#ifdef DEBUG
-				printf("task ended without enough token were found.\n");
-				#endif
-				break;
+				ppath = find_shortest_path(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
+
+				if(ppath)
+				{
+					//going back to last open point
+					ppath--;
+
+					while(ppath >= 0)
+					{
+						tmp_p = shortest_path[ppath];
+						dir = calc_direction(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
+						#ifdef DEBUG
+						ROBOT_MOVE(tmp_p->x, tmp_p->y);
+						#else
+						display_clear(0);
+						display_goto_xy(0, 0);
+						display_int(cur_p->x, 2);
+						display_goto_xy(3, 0);
+						display_int(cur_p->y, 2);
+						display_goto_xy(7, 0);
+						display_int(tmp_p->x, 2);
+						display_goto_xy(10, 0);
+						display_int(tmp_p->y, 2);
+						display_goto_xy(0, 1);
+						display_int(g_dir, 3);
+						display_goto_xy(5, 1);
+						display_int(dir, 3);
+						display_goto_xy(0, 2);
+						display_int(cur_p->inter&0xF0, 3);
+						display_update();
+
+						move(tmp_p->x, tmp_p->y);
+						#endif
+						cur_p = tmp_p;
+						ppath--;
+					}
+
+					//delete the path in stack
+					pop(npop + 1);
+					cur_p = tmp_p;
+					cur_x = cur_p->x;
+					cur_y = cur_p->y;
+				}
+				else
+				{
+					//was already at every point and back to start point
+					//task should be ended
+					//that means, not enough token can be found
+					#ifdef DEBUG
+					printf("task ended without enough token were found.\n");
+					#endif
+					break;
+				}
 			}
 		}
 		#ifdef DEBUG
@@ -716,7 +718,7 @@ int get_reverse_dir(int dir)
 	return 0;
 }
 
-int calc_direction(int start_x, int end_x, int start_y, int end_y)
+int calc_direction(int start_x, int start_y, int end_x, int end_y)
 {
 	if((start_x - end_x) == -1)
 		return EAST;

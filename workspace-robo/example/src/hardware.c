@@ -27,16 +27,16 @@
 /**
  * define speed_level
  */
-#define maxpowneg -80
+#define maxpowneg -75
 #define medpowneg -70
 #define lowpowneg -65
 
-#define maxpowpos 80
+#define maxpowpos 75
 #define medpowpos 70
 #define lowpowpos 65
 
-#define powpos medpowpos
-#define powneg medpowneg
+#define powpos maxpowpos
+#define powneg maxpowneg
 
 /**
  * Get the light sensor data
@@ -169,13 +169,13 @@ int set_position_back(int degree) {
  * moves on to intersection
  */
 void goto_intersection() {
-	while(set_position_back(-20) != 1) {
+	while(set_position_back(-10) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 	}
 	stop_robot();
 	set_count_zero();
-	while(nxt_motor_get_count(B) >= -200 && nxt_motor_get_count(C) >= -200) {
-		set_velocity(powneg,powneg);
+	while(nxt_motor_get_count(B) >= -190 && nxt_motor_get_count(C) >= -190) {
+		set_velocity(medpowneg,medpowneg);
 	}
 	stop_robot();
 }
@@ -217,36 +217,40 @@ int rotate_explore(int translated_direction[4]) {
 	int third_flag = 0;
 	int fourth_flag = 0;
 	set_count_zero();
-	while(get_degree_b(900) != 1) {
+	while(get_degree_b(870) != 1) {
 		set_velocity(medpowpos,medpowneg);
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 100 && nxt_motor_get_count(B) <= 270) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 80 && nxt_motor_get_count(B) <= 270) {
 			beep();
-			first_flag = 1;
+			first_flag++;
+			systick_wait_ms(10);
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 370 && nxt_motor_get_count(B) <= 440) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 350 && nxt_motor_get_count(B) <= 440) {
 			beep();
-			second_flag = 1;
+			second_flag++;
+			systick_wait_ms(10);
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 520 && nxt_motor_get_count(B) <= 660) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 500 && nxt_motor_get_count(B) <= 660) {
 			beep();
-			third_flag = 1;
+			third_flag++;
+			systick_wait_ms(10);
 		}
-		if(is_black() == 1 && nxt_motor_get_count(B) >= 770 && nxt_motor_get_count(B) <= 840) {
+		if(is_black() == 1 && nxt_motor_get_count(B) >= 720 && nxt_motor_get_count(B) <= 860) {
 			beep();
-			fourth_flag = 1;
+			fourth_flag++;
+			systick_wait_ms(10);
 		}
 	}
 	stop_robot();
-	if(first_flag == 1) {
+	if(first_flag >= 3) {
 		intersection = intersection + translated_direction[0];
 	}
-	if(second_flag == 1) {
+	if(second_flag >= 3) {
 		intersection = intersection + translated_direction[1];
 	}
-	if(third_flag == 1) {
+	if(third_flag >= 3) {
 		intersection = intersection + translated_direction[2];
 	}
-	if(fourth_flag == 1) {
+	if(fourth_flag >= 3) {
 		intersection = intersection + translated_direction[3];
 	}
 	return intersection;
@@ -424,7 +428,7 @@ void turn_back() {
 void turn_straight() {
 	while(get_degree_c(200) != 1) {
 		set_velocity(medpowneg,medpowpos);
-		if(is_black() == 1 && nxt_motor_get_count(C) >= 50 && nxt_motor_get_count(C) <= 200) {
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 0 && nxt_motor_get_count(C) <= 200) {
 			stop_robot();
 			return;
 		}

@@ -36,7 +36,7 @@
 #define STACK_INVALID -1
 #define QUEUE_INVALID -1
 #define START_X 6
-#define START_Y 6
+#define START_Y 7
 #define NULL 0x00
 #define INVALID -1
 
@@ -129,7 +129,6 @@ int print_stack();
 int print_queue();
 int print_path();
 #else
-int display_status(int start_x, int start_y, int end_x, int end_y, int inter, int dir);
 #endif
 
 #endif
