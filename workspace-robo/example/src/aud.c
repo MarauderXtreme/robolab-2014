@@ -1,4 +1,4 @@
-//#include "../h/RobotProxy.h"	//always delete this line for robot!
+// #include "../h/RobotProxy.h"	//always delete this line for robot!
 #ifndef DEBUG
 #include "../h/hardware.h"
 #endif
@@ -43,6 +43,7 @@ int start_finding(int start_x, int start_y)
 		cur_p = mark_point(cur_x, cur_y, inter);
 		push(cur_p);
 		//print_stack();
+
 
 		if(dir = get_direction(cur_p))
 		{
