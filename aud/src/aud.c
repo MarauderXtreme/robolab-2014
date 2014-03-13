@@ -179,6 +179,8 @@ int start_finding(int start_x, int start_y)
 					}
 					#ifdef DEBUG
 					printf("task finished!\n");
+					#else
+					beep2();
 					#endif
 
 					break;
@@ -205,7 +207,7 @@ int start_finding(int start_x, int start_y)
 				if((tmp_p->x == START_X) && (tmp_p->y == START_Y) && !IS_OPEN_POINT(points[tmp_p->x][tmp_p->y]))
 				{
 					#ifdef DEBUG
-					//return 0;
+					return 0;
 					#else
 					stop_robot();
 					beep();
