@@ -85,7 +85,6 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
-<<<<<<< HEAD
 			display_clear(0);
 			display_goto_xy(0, 0);
 			display_int(cur_p->x, 2);
@@ -103,8 +102,6 @@ int start_finding(int start_x, int start_y)
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
 
-=======
->>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 			//move one step
 			ret = move(cur_x, cur_y);
 			#endif
@@ -166,7 +163,6 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
-<<<<<<< HEAD
 							display_clear(0);
 							display_goto_xy(0, 0);
 							display_int(cur_p->x, 2);
@@ -184,8 +180,6 @@ int start_finding(int start_x, int start_y)
 							display_int(cur_p->inter&0xF0, 3);
 							display_update();
 
-=======
->>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 							move(tmp_p->x, tmp_p->y);
 							#endif
 							cur_p = tmp_p;
@@ -234,7 +228,6 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
-<<<<<<< HEAD
 					display_clear(0);
 					display_goto_xy(0, 0);
 					display_int(cur_p->x, 2);
@@ -252,8 +245,6 @@ int start_finding(int start_x, int start_y)
 					display_int(cur_p->inter&0xF0, 3);
 					display_update();
 
-=======
->>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 					move(tmp_p->x, tmp_p->y);
 					#endif
 					cur_p = tmp_p;
