@@ -84,7 +84,7 @@ int start_finding(int start_x, int start_y)
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
 
-			ret = move(cur_x, cur_y, get_reverse_dir(dir));
+			ret = move(cur_x, cur_y);
 			#endif
 
 			#ifdef DEBUG
@@ -161,7 +161,7 @@ int start_finding(int start_x, int start_y)
 							display_int(cur_p->inter&0xF0, 3);
 							display_update();
 
-							move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
+							move(tmp_p->x, tmp_p->y);
 							#endif
 							cur_p = tmp_p;
 							ppath--;
@@ -226,7 +226,7 @@ int start_finding(int start_x, int start_y)
 					display_int(cur_p->inter&0xF0, 3);
 					display_update();
 
-					move(tmp_p->x, tmp_p->y, get_reverse_dir(dir));
+					move(tmp_p->x, tmp_p->y);
 					#endif
 					cur_p = tmp_p;
 					ppath--;
@@ -274,7 +274,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x + 1, cur_p->y);
 			#else
-			move(cur_p->x + 1, cur_p->y, dir);
+			move(cur_p->x + 1, cur_p->y);
 			#endif
 			break;
 		case SOUTH:
@@ -287,7 +287,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x, cur_p->y - 1);
 			#else
-			move(cur_p->x, cur_p->y - 1, dir);
+			move(cur_p->x, cur_p->y - 1);
 			#endif
 			break;
 		case WEST:
@@ -300,7 +300,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x - 1, cur_p->y);
 			#else
-			move(cur_p->x - 1, cur_p->y, dir);
+			move(cur_p->x - 1, cur_p->y);
 			#endif
 			break;
 		case NORTH:
@@ -313,7 +313,7 @@ int aud_move(struct POINT *cur_p, int dir)
 			#ifdef DEBUG
 			ret = ROBOT_MOVE(cur_p->x, cur_p->y + 1);
 			#else
-			move(cur_p->x, cur_p->y + 1, dir);
+			move(cur_p->x, cur_p->y + 1);
 			#endif
 			break;
 		default:
