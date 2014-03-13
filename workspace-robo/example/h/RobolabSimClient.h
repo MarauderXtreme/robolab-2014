@@ -36,7 +36,7 @@
 #define STACK_INVALID -1
 #define QUEUE_INVALID -1
 #define START_X 6
-#define START_Y 6
+#define START_Y 7
 #define NULL 0x00
 #define INVALID -1
 
