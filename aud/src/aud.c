@@ -697,7 +697,7 @@ int get_reverse_dir(int dir)
 	return 0;
 }
 
-int calc_direction(int start_x, int end_x, int start_y, int end_y)
+int calc_direction(int start_x, int start_y, int end_x, int end_y)
 {
 	if((start_x - end_x) == -1)
 		return EAST;
