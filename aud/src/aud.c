@@ -43,8 +43,6 @@ int start_finding(int start_x, int start_y)
 		push(cur_p);
 		//print_stack();
 
-		#endif
-
 		if(dir = get_direction(cur_p))
 		{
 			//update current point
