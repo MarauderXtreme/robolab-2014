@@ -46,7 +46,7 @@ void ecrobot_device_terminate(void) {
 }
 
 TASK(OSEK_Main_Task) {
-	move(6, 6, g_dir);
+	move(6, 6);
 	start_finding(6, 6);
 
 

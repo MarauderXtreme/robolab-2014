@@ -3,7 +3,6 @@
 #include "../h/hardware.h"
 #endif
 #include "../h/RobolabSimClient.h"
-#include "../h/main.h"
 
 //implemetation of functions
 int start_finding(int start_x, int start_y)
@@ -21,7 +20,7 @@ int start_finding(int start_x, int start_y)
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
 	#else
-	inter = get_intersection(g_dir);
+	inter = get_intersection();
 	#endif
 
 	cur_p = mark_point(cur_x, cur_y, inter);
@@ -43,6 +42,25 @@ int start_finding(int start_x, int start_y)
 		cur_p = mark_point(cur_x, cur_y, inter);
 		push(cur_p);
 		//print_stack();
+
+		#ifndef DEBUG
+		display_clear(0);
+		display_goto_xy(0, 0);
+		display_int(cur_p->x, 2);
+		display_goto_xy(3, 0);
+		display_int(cur_p->y, 2);
+		display_goto_xy(7, 0);
+		display_int(tmp_p->x, 2);
+		display_goto_xy(10, 0);
+		display_int(tmp_p->y, 2);
+		display_goto_xy(0, 1);
+		display_int(g_dir, 3);
+		display_goto_xy(5, 1);
+		display_int(dir, 3);
+		display_goto_xy(0, 2);
+		display_int(cur_p->inter&0xF0, 3);
+		display_update();
+		#endif
 
 		if(dir = get_direction(cur_p))
 		{
@@ -67,6 +85,7 @@ int start_finding(int start_x, int start_y)
 			print_direction(cur_p, dir);
 			ret = aud_move(cur_p, dir);
 			#else
+<<<<<<< HEAD
 			display_clear(0);
 			display_goto_xy(0, 0);
 			display_int(cur_p->x, 2);
@@ -84,6 +103,8 @@ int start_finding(int start_x, int start_y)
 			display_int(cur_p->inter&0xF0, 3);
 			display_update();
 
+=======
+>>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 			//move one step
 			ret = move(cur_x, cur_y);
 			#endif
@@ -145,6 +166,7 @@ int start_finding(int start_x, int start_y)
 							printf("\n");
 							ROBOT_MOVE(tmp_p->x, tmp_p->y);
 							#else
+<<<<<<< HEAD
 							display_clear(0);
 							display_goto_xy(0, 0);
 							display_int(cur_p->x, 2);
@@ -162,6 +184,8 @@ int start_finding(int start_x, int start_y)
 							display_int(cur_p->inter&0xF0, 3);
 							display_update();
 
+=======
+>>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 							move(tmp_p->x, tmp_p->y);
 							#endif
 							cur_p = tmp_p;
@@ -210,6 +234,7 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					ROBOT_MOVE(tmp_p->x, tmp_p->y);
 					#else
+<<<<<<< HEAD
 					display_clear(0);
 					display_goto_xy(0, 0);
 					display_int(cur_p->x, 2);
@@ -227,6 +252,8 @@ int start_finding(int start_x, int start_y)
 					display_int(cur_p->inter&0xF0, 3);
 					display_update();
 
+=======
+>>>>>>> 993b6b15209149a1d297f4ec8bd233f39d72e01d
 					move(tmp_p->x, tmp_p->y);
 					#endif
 					cur_p = tmp_p;
@@ -788,32 +815,6 @@ int print_path()
 
 int main(void) {
 	start_finding(START_X, START_Y);
-
-	return 0;
-}
-#else
-int display_status(int start_x, int start_y, int end_x, int end_y, int inter, int dir)
-{
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(start_x, 2);
-	display_goto_xy(3,0);
-	display_int(start_y, 2);
-	display_goto_xy(6,0);
-	display_char('-');
-	display_goto_xy(7,0);
-	display_char('>');
-	display_goto_xy(9,0);
-	display_int(end_x, 2);
-	display_goto_xy(11,0);
-	display_int(end_y, 2);
-	display_goto_xy(0,1);
-	display_int(g_dir, 4);
-	display_goto_xy(5,1);
-	display_int(dir, 4);
-	display_goto_xy(0,2);
-	display_int(inter, 4);
-	display_update();
 
 	return 0;
 }

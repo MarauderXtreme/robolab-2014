@@ -13,7 +13,7 @@
 
 
 // Tells us where we came from
-int g_dir = 0x10;
+int g_dir = 0x20;
 
 //Define actual start position
 int actposx = 6;
