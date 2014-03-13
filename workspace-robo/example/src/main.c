@@ -46,44 +46,9 @@ void ecrobot_device_terminate(void) {
 }
 
 TASK(OSEK_Main_Task) {
-//	move(START_X, START_Y, g_dir);
-//	start_finding(actposx, actposy);
-	int i = 0;
-	g_dir = NORTH;
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(i++, 1);
-	display_goto_xy(2,0);
-	display_int(g_dir, 4); //NORTH
-	display_update();
-	move(6,6,g_dir);
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(i++, 1);
-	display_goto_xy(2,0);
-	display_int(g_dir, 4); //NORTH
-	display_update();
-	move(7,6,g_dir);
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(i++, 1);
-	display_goto_xy(2,0);
-	display_int(g_dir, 4); //WEST
-	display_update();
-	move(7,5,g_dir);
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(i++, 1);
-	display_goto_xy(2,0);
-	display_int(g_dir, 4); //NORTH
-	display_update();
-	move(8,5,g_dir);
-	display_clear(0);
-	display_goto_xy(0,0);
-	display_int(i++, 1);
-	display_goto_xy(2,0);
-	display_int(g_dir, 4);
-	display_update();
+	move(6, 6, g_dir);
+	start_finding(6, 6);
+
 
 	/**
 	 * DO NOT DELETE THIS METHOD
@@ -91,7 +56,7 @@ TASK(OSEK_Main_Task) {
 	 */
 	display_clear(0);
 	display_goto_xy(0,0);
-	display_char('EXTERMINATE');
+	display_string("EXTERMINATE");
 	display_update();
 	while(1) {
 		systick_wait_ms(1);

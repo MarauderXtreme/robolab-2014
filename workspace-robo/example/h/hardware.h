@@ -22,6 +22,7 @@ void set_velocity(int vb,int vc);
 void start_robot();
 void stop_robot();
 void beep();
+void beep2();
 int is_black();
 int get_degree_b(int degree);
 int get_degree_c(int degree);
