@@ -252,6 +252,9 @@ int rotate_explore(int translated_direction[4]) {
 	return intersection;
 }
 
+/**
+ * Move function for interface
+ */
 int move(int posx, int posy, int direction) {
 	int ret = ROBOT_FAIL;
 	drive(posx, posy, direction);
@@ -278,6 +281,11 @@ int move(int posx, int posy, int direction) {
 	return ret;
 }
 
+/**
+ * Calculates the difference between position to move and actual position
+ * Sets actual position to position to move to
+ * Calls rotate
+ */
 void drive(int posx, int posy, int direction) {
 	int x = posx - actposx;
 	int y = posy - actposy;
@@ -286,6 +294,9 @@ void drive(int posx, int posy, int direction) {
 	g_dir = rotate(x,y,direction);
 }
 
+/**
+ * Translates input to wich direction should be turned
+ */
 int rotate(int x, int y, int direction) {
 	set_count_zero();
 	switch (direction) {
@@ -368,6 +379,9 @@ int rotate(int x, int y, int direction) {
 	return direction;
 }
 
+/**
+ * Turns the robot to left
+ */
 void turn_left() {
 	while(get_degree_b(230) != 1) {
 		set_velocity(medpowpos,medpowneg);
@@ -377,15 +391,23 @@ void turn_left() {
 		}
 	}
 }
+
+/**
+ * Turns the robot to right
+ */
 void turn_right() {
-	while(get_degree_c(360) != 1) {
+	while(get_degree_c(400) != 1) {
 		set_velocity(medpowneg,medpowpos);
-		if(is_black() == 1 && nxt_motor_get_count(C) >= 160 && nxt_motor_get_count(C) <= 360) {
+		if(is_black() == 1 && nxt_motor_get_count(C) >= 160 && nxt_motor_get_count(C) <= 400) {
 			stop_robot();
 			return;
 		}
 	}
 }
+
+/**
+ * Turns the robot 180 degree
+ */
 void turn_back() {
 	while(get_degree_b(400) != 1) {
 		set_velocity(medpowpos,medpowneg);
@@ -395,6 +417,10 @@ void turn_back() {
 		}
 	}
 }
+
+/**
+ * Turns the robot straight ahead
+ */
 void turn_straight() {
 	while(get_degree_c(200) != 1) {
 		set_velocity(medpowneg,medpowpos);
