@@ -76,7 +76,7 @@ void stop_robot() {
  * BEEEEEP
  */
 void beep() {
-	ecrobot_sound_tone(300,500,50);
+	ecrobot_sound_tone(300,500,80);
 }
 void beep2() {
 	ecrobot_sound_tone(600,500,50);
@@ -169,7 +169,7 @@ int set_position_back(int degree) {
  * moves on to intersection
  */
 void goto_intersection() {
-	while(set_position_back(-10) != 1) {
+	while(set_position_back(-15) != 1) {
 		set_velocity(lowpowneg,lowpowpos);
 	}
 	stop_robot();
@@ -220,22 +220,18 @@ int rotate_explore(int translated_direction[4]) {
 	while(get_degree_b(870) != 1) {
 		set_velocity(medpowpos,medpowneg);
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 80 && nxt_motor_get_count(B) <= 270) {
-			beep();
 			first_flag++;
 			systick_wait_ms(10);
 		}
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 350 && nxt_motor_get_count(B) <= 440) {
-			beep();
 			second_flag++;
 			systick_wait_ms(10);
 		}
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 500 && nxt_motor_get_count(B) <= 660) {
-			beep();
 			third_flag++;
 			systick_wait_ms(10);
 		}
 		if(is_black() == 1 && nxt_motor_get_count(B) >= 720 && nxt_motor_get_count(B) <= 860) {
-			beep();
 			fourth_flag++;
 			systick_wait_ms(10);
 		}
@@ -281,7 +277,6 @@ int move(int posx, int posy) {
 			ret = ROBOT_TOKENFOUND;
 		}
 	}
-	beep2();
 	return ret;
 }
 

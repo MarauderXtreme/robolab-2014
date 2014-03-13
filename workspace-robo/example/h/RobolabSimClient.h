@@ -29,14 +29,14 @@
 
 #define STACK_LENGTH 128
 #define QUEUE_LENGTH 128
-#define MAX_LENGTH 13
-#define MAX_WIDTH 7
+#define MAX_LENGTH 15
+#define MAX_WIDTH 9
 #define TOKEN_COUNT 3
 #define DIST_INFINITY 128
 #define STACK_INVALID -1
 #define QUEUE_INVALID -1
-#define START_X 6
-#define START_Y 7
+#define START_X 7
+#define START_Y 9
 #define NULL 0x00
 #define INVALID -1
 

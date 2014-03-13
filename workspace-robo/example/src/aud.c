@@ -20,8 +20,7 @@ int start_finding(int start_x, int start_y)
 	#ifdef DEBUG
 	inter = Robot_GetIntersections();
 	#else
-	//inter = get_intersection(get_reverse_dir(dir));
-	inter = SOUTH;
+	inter = get_intersection();
 	#endif
 
 	cur_p = mark_point(cur_x, cur_y, inter);
@@ -36,11 +35,14 @@ int start_finding(int start_x, int start_y)
 	while(token < TOKEN_COUNT)
 	{
 		#ifdef DEBUG
-		inter = Robot_GetIntersections();
-		print_intersection(inter);
+		//inter = Robot_GetIntersections();
+		//print_intersection(inter);
 		#endif
 
-		cur_p = mark_point(cur_x, cur_y, inter);
+		if(points[cur_x][cur_y].detected == 0)
+			cur_p = mark_point(cur_x, cur_y, inter);
+		else
+			cur_p = &points[cur_x][cur_y];
 		push(cur_p);
 		//print_stack();
 
@@ -91,10 +93,11 @@ int start_finding(int start_x, int start_y)
 			#ifdef DEBUG
 			inter = Robot_GetIntersections();
 			#else
-			inter = get_intersection(get_reverse_dir(dir));
+			inter = get_intersection();
 			#endif
 
 			cur_p = mark_point(cur_x, cur_y, inter);
+
 			#ifdef DEBUG
 			print_point(cur_p);
 			#endif
@@ -102,7 +105,6 @@ int start_finding(int start_x, int start_y)
 			if(ret == ROBOT_SUCCESS)
 			{
 				#ifndef DEBUG
-				beep2();
 				#endif
 			}
 			else if(ret == ROBOT_TOKENFOUND)
@@ -128,10 +130,6 @@ int start_finding(int start_x, int start_y)
 					//all token were found, go back to start point
 					#ifdef DEBUG
 					printf("going back to start point......\n");
-					#else
-					beep2();
-					beep2();
-					beep2();
 					#endif
 					push(cur_p);
 					ppath = find_shortest_path(cur_p->x, cur_p->y, START_X, START_Y);
@@ -181,7 +179,7 @@ int start_finding(int start_x, int start_y)
 					#ifdef DEBUG
 					printf("task finished!\n");
 					#else
-					//move(START_X, START_Y + 1);
+					beep();
 					#endif
 
 					break;
@@ -203,18 +201,18 @@ int start_finding(int start_x, int start_y)
 			printf("going back to (%d, %d)\n", tmp_p->x, tmp_p->y);
 			#endif
 
-			if((tmp_p->x == START_X) && (tmp_p->y == START_Y) && (token == 0))
+			if(tmp_p)
 			{
-				#ifdef DEBUG
-				return 0;
-				#else
-				stop_robot();
-				beep();
-				return 0;
-				#endif
-			}
-			else
-			{
+				if((tmp_p->x == START_X) && (tmp_p->y == START_Y) && !IS_OPEN_POINT(points[tmp_p->x][tmp_p->y]))
+				{
+					#ifdef DEBUG
+					return 0;
+					#else
+					stop_robot();
+					beep();
+					return 0;
+					#endif
+				}
 				ppath = find_shortest_path(cur_p->x, cur_p->y, tmp_p->x, tmp_p->y);
 
 				if(ppath)

@@ -46,7 +46,7 @@ void ecrobot_device_terminate(void) {
 }
 
 TASK(OSEK_Main_Task) {
-	start_finding(6, 7);
+	start_finding(START_X, START_Y);
 
 	display_clear(0);
 	display_goto_xy(0,0);
