@@ -67,7 +67,6 @@ int start_finding(int start_x, int start_y)
 			ret = aud_move(cur_p, dir);
 			#else
 			//move one step
-			#ifndef DEBUG
 			display_clear(0);
 			display_goto_xy(0, 0);
 			display_int(cur_p->x, 2);
